@@ -172,7 +172,6 @@
 
 .music-list {
     position: absolute;
-    background: var(--white);
     width: 100%;
     height: 50%;
     left: 0;
@@ -185,11 +184,11 @@
     border: 1px solid #142348;
     transition: all 0.15s ease-out;
     background-color: white;
-    .show{
-        bottom: 0;
-        opacity: 1;
-        pointer-events: auto;
-    }
+}
+.music-list.show {
+    bottom: 0;
+    opacity: 1;
+    pointer-events: auto;
 }
 
 .music-list-header .music-list-row {

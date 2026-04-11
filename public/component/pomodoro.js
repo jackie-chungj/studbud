@@ -102,7 +102,7 @@ function startTimer()
     }
     changedisptime.innerHTML=min+":"+sec;
 
-    if(min==00 && sec==00)
+    if(min==0 && sec==0)
     {
     var SBTN=document.getElementById("SBTN");
     var PBTN=document.getElementById("PBTN");
@@ -206,7 +206,7 @@ function startBreak()
     }
     changedisptime.innerHTML=min+":"+sec;
     // if session and breaks are done alert done message
-    if(min==00 && sec==00)
+    if(min==0 && sec==0)
     {
         heading.innerHTML="Start";
         document.querySelector('.line').style.background = 'green';

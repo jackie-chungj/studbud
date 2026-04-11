@@ -1,7 +1,0 @@
-let input = document.querySelector('#dictionary-input');
-let searchBtn = document.querySelector('#search');
-let apiKey = 'YOUR_API_KEY';
-let notFound = document.querySelector('.not__found');
-let defBox = document.querySelector('.def');
-let audioBox = document.querySelector('.audio');
-let loading = document.querySelector('.loading');

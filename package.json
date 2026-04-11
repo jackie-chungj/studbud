@@ -2,7 +2,6 @@
   "name": "studbud",
   "version": "1.0.0",
   "description": "studbud",
-  "main": "dist/index.html",
   "scripts": {
     "start": "node server.js",
     "prestart": "parcel build ./public/index.html",
@@ -28,9 +27,9 @@
     "sass": "^1.32.13"
   },
   "devDependencies": {
-    "@parcel/transformer-sass": "^2.0.0-beta.2",
-    "autoprefixer": "^10.2.5",
-    "parcel": "^2.0.0-beta.2",
-    "postcss": "^8.2.15"
+    "@parcel/transformer-sass": "^2.12.0",
+    "autoprefixer": "^10.4.0",
+    "parcel": "^2.12.0",
+    "postcss": "^8.4.0"
   }
 }

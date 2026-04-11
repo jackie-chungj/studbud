@@ -85,23 +85,17 @@ function renderTask(task){
     // Event Listeners for DOM elements
     delButton.addEventListener("click", function(event){
       event.preventDefault();
-      console.log(taskListArray);
-      // create a code that is going to check the id then delete it from the array if necessary 
-      let id = event.target.parentElement.getAttribute('data-id');
-      // with that id we are going to compare it to the value of the array 
-      // A tricky line that will allow us to search through an array and return in index, given an input that we provide which would be the value of the item in the array 
+      let li = event.currentTarget.closest('li');
+      let id = li.getAttribute('data-id');
       let index = taskListArray.findIndex(task => task.id === Number(id));
-
-      // remove that Item from the array all together once they click the delete button, we are going to do this in a function we will create called remove item from array 
-      removeItemFromArray(taskListArray,index)
-      console.log(taskListArray);
+      removeItemFromArray(taskListArray, index);
       updateEmpty();
-      item.remove();
+      li.remove();
     })
     // Event Listeners for complete button
     completedButton.addEventListener("click", function(event){
-      let item = event.target.parentElement;
-      item.classList.toggle("completed");
+      let li = event.currentTarget.closest('li');
+      li.classList.toggle("completed");
     })  
 
 // help and assist from Rob Dongas

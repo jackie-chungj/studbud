@@ -92,7 +92,8 @@
         margin: 0px;
     }
     .pomo-setting-container {
-        display: row;
+        display: flex;
+        flex-direction: row;
         width: 100%;
         .pomo-setting-flex {
             margin-top: 35px;

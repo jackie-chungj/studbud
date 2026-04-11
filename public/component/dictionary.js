@@ -64,13 +64,10 @@ async function getData(word) {
     let definition = data[0].shortdef[0];
     defBox.innerText = definition;
 
-    if (data[0].syns[0].pt[0][1]) {
-        let synoymns = data[0].syns[0].pt[0][1];
-        synsBox.innerText = synoymns;
-    } else {
+    try {
+        const synoymns = data[0].syns[0].pt[0][1];
+        synsBox.innerText = synoymns || "Synonyms not found..";
+    } catch (e) {
         synsBox.innerText = "Synonyms not found..";
-        
     }
-
-    console.log(data);
 }

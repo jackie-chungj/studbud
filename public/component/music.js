@@ -68,7 +68,7 @@ moreMusicBtn = wrapper.querySelector("#more-music"),
 closemoreMusic = musicList.querySelector("#music-list-close");
 
 let musicIndex = Math.floor((Math.random() * allMusic.length) + 1);
-isMusicPaused = true;
+let isMusicPaused = true;
 
 window.addEventListener("load", ()=>{
   loadMusic(musicIndex);
@@ -134,29 +134,29 @@ nextBtn.addEventListener("click", ()=>{
   nextMusic();
 });
 
+// update song total duration once when audio data is loaded
+const musicDuartion = wrapper.querySelector(".max-duration");
+mainAudio.addEventListener("loadeddata", ()=>{
+  let mainAdDuration = mainAudio.duration;
+  let totalMin = Math.floor(mainAdDuration / 60);
+  let totalSec = Math.floor(mainAdDuration % 60);
+  if(totalSec < 10){
+    totalSec = `0${totalSec}`;
+  }
+  musicDuartion.innerText = `${totalMin}:${totalSec}`;
+});
+
 // update progress bar width according to music current time
+const musicCurrentTime = wrapper.querySelector(".current-time");
 mainAudio.addEventListener("timeupdate", (e)=>{
-  const currentTime = e.target.currentTime; //getting playing song currentTime
-  const duration = e.target.duration; //getting playing song total duration
+  const currentTime = e.target.currentTime;
+  const duration = e.target.duration;
   let progressWidth = (currentTime / duration) * 100;
   progressBar.style.width = `${progressWidth}%`;
 
-  let musicCurrentTime = wrapper.querySelector(".current-time"),
-  musicDuartion = wrapper.querySelector(".max-duration");
-  mainAudio.addEventListener("loadeddata", ()=>{
-    // update song total duration
-    let mainAdDuration = mainAudio.duration;
-    let totalMin = Math.floor(mainAdDuration / 60);
-    let totalSec = Math.floor(mainAdDuration % 60);
-    if(totalSec < 10){ //if sec is less than 10 then add 0 before it
-      totalSec = `0${totalSec}`;
-    }
-    musicDuartion.innerText = `${totalMin}:${totalSec}`;
-  });
-  // update playing song current time
   let currentMin = Math.floor(currentTime / 60);
   let currentSec = Math.floor(currentTime % 60);
-  if(currentSec < 10){ //if sec is less than 10 then add 0 before it
+  if(currentSec < 10){
     currentSec = `0${currentSec}`;
   }
   musicCurrentTime.innerText = `${currentMin}:${currentSec}`;
@@ -238,7 +238,7 @@ for (let i = 0; i < allMusic.length; i++) {
                   <p>${allMusic[i].artist}</p>
                 </div>
                 <span id="${allMusic[i].src}" class="audio-duration">3:40</span>
-                <audio class="${allMusic[i].src}" src="songs/${allMusic[i].src}.mp3"></audio>
+                <audio class="${allMusic[i].src}" src="assets/songs/${allMusic[i].src}.mp3"></audio>
               </li>`;
   ulTag.insertAdjacentHTML("beforeend", liTag); //inserting the li inside ul tag
 
