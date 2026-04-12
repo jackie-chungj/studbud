@@ -2,64 +2,100 @@
   box-sizing: border-box;
 }
 
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+}
+
+// ── Background layering ────────────────────────────────────
+// Layer 1 (bottom): gradient on html, fixed to viewport.
+// Layer 2 (middle): frosted white veil on body — intentional,
+//   keeps the gradient visible but softened beneath the cards.
+// Layer 3 (top): white cards (.timer, .task, etc.)
+
 html {
-    background-image:  
-    radial-gradient(at 0% 0%, hsla(170,59%,95%,1) 0, transparent 44%),  
-    radial-gradient(at 51% 100%, hsla(227,97%,88%,1) 0, transparent 50%),  
-    radial-gradient(at 100% 100%, hsla(222,100%,95%,1) 0, transparent 31%),  
-    radial-gradient(at 1% 99%, hsla(230,75%,87%,1) 0, transparent 53%),  
-    radial-gradient(at 100% 0%, hsla(224,100%,95%,1) 0, transparent 23%),  
-    radial-gradient(at 34% 0%, hsla(199,67%,80%,1) 0, transparent 43%),  
+    min-height: 100vh;
+    background-image:
+    radial-gradient(at 0% 0%, hsla(170,59%,95%,1) 0, transparent 44%),
+    radial-gradient(at 51% 100%, hsla(227,97%,88%,1) 0, transparent 50%),
+    radial-gradient(at 100% 100%, hsla(222,100%,95%,1) 0, transparent 31%),
+    radial-gradient(at 1% 99%, hsla(230,75%,87%,1) 0, transparent 53%),
+    radial-gradient(at 100% 0%, hsla(224,100%,95%,1) 0, transparent 23%),
+    radial-gradient(at 34% 0%, hsla(199,67%,80%,1) 0, transparent 43%),
     radial-gradient(at 100% 48%, hsla(219,96%,92%,1) 0, transparent 100%);
-    background-size: cover;
+    background-size: 100vw 100vh;
     background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+// Layer 2: frosted white veil, fixed to the viewport so its size
+// is always exactly the screen — no dependency on body/html height.
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: rgb(255 255 255 / 60%);
+    z-index: -1;
+    pointer-events: none;
 }
 
 .grid-container {
-  padding: 50px 50px 50px 50px;   // top, right, bottom, left
+  padding: 28px;
   display: grid;
-  grid-template-columns: 0.9fr 1.18fr;
-  grid-template-rows: 65px 65px 1.8fr;
-  gap: 0px 65px;
+  grid-template-columns: 0.85fr 1.15fr;
+  grid-template-rows: 56px calc(100vh - 56px - 16px - 56px);
+  column-gap: 16px;
+  row-gap: 16px;
   grid-template-areas:
-    "header ." ". task" "features task";
-  width: 100vw;
-  height: 100vh;
-  justify-content: center; 
+    "header header"
+    "features task";
+  width: 100%;
+  min-height: 100vh;
+  box-sizing: border-box;
 }
 
 .features {
   display: grid;
+  // Music and Dictionary share the bottom row equally
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 0.9fr;
-  gap: 35px 35px;
+  // Bottom row (music/dict) is slightly taller for better left-column balance
+  grid-template-rows: 1fr 1.1fr;
+  gap: 16px;
   grid-template-areas:
-    "timer timer" "music dictionary";
+    "timer      timer"
+    "music  dictionary";
   grid-area: features;
 }
-.timer { 
+.timer {
   grid-area: timer;
   background-color: #ffff;
-  border-radius: 30px; 
-  padding: 40px 40px 40px 40px;
+  border-radius: 30px;
+  padding: 22px 20px;
+  display: flex;
+  flex-direction: column;
 }
 
-.music, .dictionary { 
+.music, .dictionary {
   background-color: #ffff;
-  border-radius: 30px;  
-  padding: 40px;
+  border-radius: 30px;
+}
+
+.dictionary {
+  padding: 18px 20px;
 }
 
 button {
   border-radius: 40px;
   text-align: center;
   color: #fff;
-  font-size: 25px;
+  font-size: 14px;
   font-weight: 600;
   display: inline-block;
   text-decoration: none;
   cursor: pointer;
-  letter-spacing: 2px;
+  letter-spacing: 0.04em;
   -webkit-transition: all 0.4s;
   -moz-transition: all 0.4s;
   transition: all 0.4s;
@@ -82,10 +118,10 @@ button {
 }
 
 .mainBtns {
-  height: 50px;
-  width: 130px;
+  height: 40px;
+  width: 110px;
   outline:none;
-  font-size: 25px;
+  font-size: 14px;
   background-color: #142348;
   color: white;
   border-radius: 30px;
@@ -97,115 +133,281 @@ button {
   background: rgb(186, 186, 186);
   border: none;
 }
-
-
-// Add Task button Modal
-.task-modal {
-  display: none; // Hidden by default 
-  position: absolute;
-  margin-left: auto;
-  margin-right: auto;
-  right: 0;
-  border: 1px solid #65adfc;
-  background-color: #fff;
-  border-radius: 30px; 
-  overflow: auto; // Enable scroll if needed 
+#stopwatch-lap-button {
+  &:disabled {
+    background: rgb(186, 186, 186);
+    cursor: not-allowed;
+  }
 }
 
 
-// Intro button Modal
+// ── Header ─────────────────────────────────────────────────
+.header {
+  grid-area: header;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.site-logo {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #142348;
+  letter-spacing: -0.3px;
+}
+
+.intro-btn {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 7px 18px;
+  background: transparent;
+  color: rgba(20, 35, 72, 0.55);
+  border: 1.5px solid rgba(20, 35, 72, 0.18);
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+
+  &:hover {
+    background: #142348;
+    color: #fff;
+    border-color: #142348;
+  }
+}
+
+// ── Intro modal ────────────────────────────────────────────
 .intro-modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  padding-top: 100px; /* Location of the box */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  display: none;
+  position: fixed;
+  z-index: 100;
+  inset: 0;
+  background: rgba(10, 20, 50, 0.35);
+  backdrop-filter: blur(4px);
+  overflow: auto;
+  padding: 60px 20px;
 }
 
 .intro-content {
   position: relative;
-  background-color: #fefefe;
+  background: #fff;
   margin: auto;
-  border-radius: 30px;  
-  padding: 40px;
-  width: 80%;
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
-  -webkit-animation-name: animatetop;
-  -webkit-animation-duration: 0.4s;
-  animation-name: animatetop;
-  animation-duration: 0.4s;
-  
+  border-radius: 24px;
+  padding: 36px 40px 40px;
+  width: min(560px, 90%);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+
+  .closeBtn {
+    position: absolute;
+    right: 22px;
+    top: 20px;
+    font-size: 18px;
+    color: rgba(20, 35, 72, 0.35);
+    cursor: pointer;
+    transition: color 0.15s;
+    &:hover { color: #142348; }
+  }
+
+  h2 { font-size: 1.1rem; margin-bottom: 4px; }
+
   .intro-text {
-    padding: 2px 16px;
-    .closeBtn {
-      font-size: 50px;
-    }
+    padding: 0;
     ul {
+      list-style: disc;
       list-style-position: inside;
-      font-size: 22px;
-      font-weight: normal;
-      margin: 0 20px;
+      font-size: 0.85rem;
+      font-weight: 400;
+      margin: 0 0 0 4px;
       padding: 0;
+      color: rgba(20, 35, 72, 0.7);
+      line-height: 1.7;
     }
   }
-  .intro-detail {
-    h2 {
-      padding: 10px 0;
-      font-size: 30px;
-    }
-
+  .intro-detail h2 {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: rgba(20, 35, 72, 0.4);
+    margin: 16px 0 4px;
+    padding: 0;
   }
 }
 
-// Modal close button 
-.closeBtn {
-  color: #142348;
+// ── Add Task drawer ────────────────────────────────────────
+// .drawer-overlay is the full-screen backdrop.
+// Clicking it (but not the .drawer panel) closes the drawer.
+.drawer-overlay {
+  display: none;
+  position: fixed;
+  z-index: 200;
+  inset: 0;
+  background: rgba(10, 20, 50, 0.25);
+  backdrop-filter: blur(3px);
+}
+
+.drawer {
   position: absolute;
-  right: 30px;
-  top: 30px;
+  top: 0;
+  right: 0;
+  width: 340px;
+  height: 100%;
+  background: #fff;
+  box-shadow: -8px 0 32px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  animation: drawerIn 0.22s ease;
 }
-.closeBtn:hover, .closeBtn:focus {
-  color: #65adfc;
-  text-decoration: none;
+
+@keyframes drawerIn {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+
+.drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 24px 16px;
+  border-bottom: 1px solid rgba(20, 35, 72, 0.07);
+
+  h2 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #142348;
+    margin: 0;
+  }
+}
+
+.drawer-close {
+  background: none;
+  border: none;
+  font-size: 15px;
+  color: rgba(20, 35, 72, 0.35);
   cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  transition: color 0.15s, background 0.15s;
+  letter-spacing: 0;
+
+  &:hover {
+    color: #142348;
+    background: rgba(20, 35, 72, 0.06);
+  }
 }
-/* Add Animation */
+
+.drawer-form {
+  padding: 20px 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+
+  label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: rgba(20, 35, 72, 0.45);
+    margin-top: 12px;
+    margin-bottom: 0;
+  }
+
+  input, select {
+    height: 38px;
+    width: 100%;
+    border: 1.5px solid rgba(20, 35, 72, 0.14);
+    border-radius: 10px;
+    padding: 0 12px;
+    font-size: 13px;
+    color: #142348;
+    background: #fafafa;
+    outline: none;
+    transition: border-color 0.15s;
+    font-family: inherit;
+
+    &:focus {
+      border-color: #65adfc;
+      background: #fff;
+    }
+  }
+
+  select { cursor: pointer; }
+}
+
+.drawer-submit {
+  margin-top: 20px;
+  height: 42px;
+  width: 100%;
+  background: #142348;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background 0.18s ease, transform 0.1s ease;
+
+  &:hover { background: #1e3270; }
+  &:active { transform: scale(0.98); }
+}
+
+// ── Add Task trigger button ────────────────────────────────
+.task-add-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 7px 16px;
+  background: #142348;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.18s ease;
+
+  .fa-plus { margin-right: 0; font-size: 11px; }
+
+  &:hover { background: #1e3270; }
+}
+
+/* Animation kept for intro modal (no longer used by drawer) */
 @-webkit-keyframes animatetop {
   from {top:-300px; opacity:0}
   to {top:0; opacity:1}
 }
-
 @keyframes animatetop {
   from {top:-300px; opacity:0}
   to {top:0; opacity:1}
 }
 
 
-// Responsive
-@media only screen and (max-width: 1512px) {
+// Responsive — only stack below 900px (tablet / mobile)
+// The bento grid runs on all desktop screens including 1280px, 1440px, 1512px+
+@media only screen and (max-width: 900px) {
   html {
     height: max-content;
   }
   .grid-container {
     height: max-content;
     display: block;
+    padding: 24px;
   }
   .header {
-    padding-bottom: 50px;
+    padding-bottom: 32px;
   }
   .features {
     display: block;
   }
   .timer, .music, .dictionary {
-    margin: 0 0 30px 0;
+    margin: 0 0 24px 0;
   }
- 
+  .music {
+    min-height: 420px;
+  }
 }
 
 @media only screen and (max-width: 800px) {
@@ -240,7 +442,7 @@ button {
 
 @media only screen and (max-width: 570px) {
   .grid-container {
-    padding: 30px;
+    padding: 20px;
   }
   .mainBtns {
     font-size: 10px;

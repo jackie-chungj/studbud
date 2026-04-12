@@ -2,12 +2,13 @@
     width: 100%;
     background-color: transparent;
     display: flex;
-    margin-bottom: 15px;
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid rgba(20, 35, 72, 0.04);
     .timer-links {
         list-style: none;
         list-style-type: none;
         display: flex;
-        padding-right: 40px;
         padding: 0;
         margin: 0;
     }
@@ -15,19 +16,25 @@
 .timer-nav-item a {
     text-decoration: none;
     padding: 0 20px;
-    color: #123;
-    font-size: 1.563rem;
-    font-weight: 200;
+    color: rgba(20, 35, 72, 0.5);
+    font-size: 1.1rem;
+    font-weight: 600;
     &:hover {
-        color: #abc;
+        color: #142348;
     }
     &.active {
-        font-weight: bolder;
-        color: #123;
+        font-weight: 700;
+        color: #142348;
     }
+}
+.timer-nav-item:first-child a {
+    padding-left: 0;
 }
 
 .timer-page-container {
+    flex: 1;
+    min-height: 0;
+
     &#pomodoro {
       text-align: center;
     }

@@ -11,6 +11,9 @@ var dontDo = document.getElementById("dont-do");
 
 let tasklist;
 
+// ── Drag-and-drop state ────────────────────────────────────
+let draggedItem = null;
+
 var dueDateInput = document.getElementById("dueDateInput");
 var completionTimeInput = document.getElementById("completionTimeInput");
 var estimatedTimeInput = document.getElementById("estimatedTimeInput");
@@ -61,24 +64,38 @@ function renderTask(task){
     // Create LI
     let item = document.createElement('li');
     item.classList.add("itemDiv")
-    // set this up as a html attribute, so we can create arbitrary html attributes for different data we install. 
-    // we do this by using the set attribute function, for the name attribute we usually use the data pre fix followed by whatever type of data we're storing 
+    // set this up as a html attribute, so we can create arbitrary html attributes for different data we install.
+    // we do this by using the set attribute function, for the name attribute we usually use the data pre fix followed by whatever type of data we're storing
     item.setAttribute('data-id', task.id);
-    item.innerHTML = "<p>" + task.taskDescription + "</p>" + "<p>" + task.dueDate + "</p>";
-  
+    item.setAttribute('draggable', 'true');
+    item.innerHTML =
+        '<span class="task-text">' + task.taskDescription + '</span>' +
+        (task.dueDate ? '<span class="task-date">' + task.dueDate + '</span>' : '');
+
+    // Drag events
+    item.addEventListener('dragstart', () => {
+        draggedItem = item;
+        setTimeout(() => item.classList.add('dragging'), 0);
+    });
+    item.addEventListener('dragend', () => {
+        item.classList.remove('dragging');
+        draggedItem = null;
+    });
+
     box.appendChild(item);
 
-    
     // Complete Button
     let completedButton = document.createElement("button");
-    completedButton.innerHTML = '<i class="fas fa-check fa-xs"></i>';
+    completedButton.innerHTML = '<i class="fas fa-check"></i>';
     completedButton.classList.add("complete-btn");
+    completedButton.setAttribute('title', 'Mark complete');
     item.appendChild(completedButton);
 
     // Delete Button
     let delButton = document.createElement("button");
-    delButton.innerHTML = '<i class="fas fa-trash fa-xs"></i>';
+    delButton.innerHTML = '<i class="fas fa-times"></i>';
     delButton.classList.add('delete-btn');
+    delButton.setAttribute('title', 'Remove task');
     item.appendChild(delButton);
 
 
@@ -196,3 +213,32 @@ function days_between(date1, date2) {
 
 }
 // Function adapted from https://stackoverflow.com/questions/2627473/how-to-calculate-the-number-of-days-between-two-dates
+
+// ── Drag-and-drop drop zones ───────────────────────────────
+function initDropZones() {
+    [doIt, schedule, relegate, dontDo].forEach(quadrant => {
+        const box = quadrant.children[1]; // ul.box
+
+        quadrant.addEventListener('dragover', e => {
+            e.preventDefault();
+            quadrant.classList.add('drag-over');
+        });
+
+        quadrant.addEventListener('dragleave', e => {
+            if (!quadrant.contains(e.relatedTarget)) {
+                quadrant.classList.remove('drag-over');
+            }
+        });
+
+        quadrant.addEventListener('drop', e => {
+            e.preventDefault();
+            quadrant.classList.remove('drag-over');
+            if (draggedItem && draggedItem.parentElement !== box) {
+                box.appendChild(draggedItem);
+                updateEmpty();
+            }
+        });
+    });
+}
+
+initDropZones();

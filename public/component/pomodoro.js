@@ -10,6 +10,10 @@ var continueBtn=document.getElementById("pomo-continue-button");
 var heading=document.getElementById("pomo-text");
 var timerName;
 var count=0;
+var pomoline = document.querySelector('.line');
+var sessionTotalSec = 0;
+var breakTotalSec = 0;
+var inBreak = false;
 
 // Increase sessions
 increaseSession.addEventListener("click",function(){
@@ -77,6 +81,10 @@ decreaseBreak.addEventListener("click",function(){
     PBTN.style.display='block';
     //console.log(time);
     heading.innerHTML="Session Starts";
+    sessionTotalSec = parseInt(document.getElementById("STIME").innerHTML) * 60;
+    pomoline.style.width = '150px';
+    inBreak = false;
+    document.getElementById("SKIPBTN").style.display = 'block';
     increaseSession.disabled=true;
     decreaseSession.disabled=true;
     increaseBreak.disabled=true;
@@ -114,6 +122,7 @@ function startTimer()
 
         return;
     }
+    updateLine(parseInt(min)*60 + parseInt(sec), sessionTotalSec, 150);
     timerName=setTimeout(startTimer,1000);
 }
 
@@ -125,8 +134,9 @@ pauseBtn.addEventListener("click",function()
     var CBTN=document.getElementById("CBTN");
     SBTN.style.display='none';
     CBTN.style.display='block';
-    PBTN.style.display='none'; 
-    heading.innerHTML="Session Paused";   
+    PBTN.style.display='none';
+    document.getElementById("SKIPBTN").style.display = 'none';
+    heading.innerHTML="Session Paused";
 
 });
 continueBtn.addEventListener("click",function()
@@ -137,19 +147,59 @@ continueBtn.addEventListener("click",function()
     var CBTN=document.getElementById("CBTN");
     SBTN.style.display='none';
     CBTN.style.display='none';
-    PBTN.style.display='block'; 
+    PBTN.style.display='block';
+    document.getElementById("SKIPBTN").style.display = 'block';
 
-    startTimer();   
+    startTimer();
     heading.innerHTML="Session Starts";
 });
 
-// Resets the pomodoro timer but i couldnt make it relaod only the div
-// I tried document.getElementById("pomodoro-container").reload(); but it doesn't work.
-// So i just left it to reset the whole page instead
-resetBtn.addEventListener("click",function()
-{
-    window.location.reload();
-})
+document.getElementById("pomo-skip-button").addEventListener("click", function() {
+    clearTimeout(timerName);
+    if (inBreak) {
+        resetPomodoro();
+    } else {
+        breakTime();
+    }
+});
+
+resetBtn.addEventListener("click", resetPomodoro);
+
+function resetPomodoro() {
+    // Stop any running timer or break countdown
+    clearTimeout(timerName);
+
+    // Restore the timer display to the current session setting
+    var sessionMin = parseInt(document.getElementById("STIME").innerHTML);
+    var displayMin = sessionMin < 10 ? "0" + sessionMin : "" + sessionMin;
+    document.getElementById("TIME").innerHTML = displayMin + ":00";
+
+    // Restore button visibility: show Start, hide Pause and Continue
+    document.getElementById("SBTN").style.display = "block";
+    document.getElementById("PBTN").style.display = "none";
+    document.getElementById("CBTN").style.display = "none";
+
+    // Restore heading text and progress line
+    heading.innerHTML = "Start Working!";
+    document.querySelector(".line").style.background = "red";
+    pomoline.style.width = '150px';
+    document.getElementById("SKIPBTN").style.display = "none";
+    inBreak = false;
+
+    // Re-enable session and break controls
+    increaseSession.disabled = false;
+    decreaseSession.disabled = false;
+    increaseBreak.disabled = false;
+    decreaseBreak.disabled = false;
+
+    // Reset internal counter
+    count = 0;
+}
+
+function updateLine(remainingSec, totalSec, maxPx) {
+    var ratio = totalSec > 0 ? remainingSec / totalSec : 1;
+    pomoline.style.width = Math.round(ratio * maxPx) + 'px';
+}
 
 function checkMinute(min)
 {
@@ -186,6 +236,10 @@ function breakTime()
     count=count+1;
     heading.innerHTML="Break Time :)";
     document.querySelector('.line').style.background = 'blue';
+    breakTotalSec = parseInt(timeArray[0]) * 60;
+    pomoline.style.width = '150px';
+    inBreak = true;
+    document.getElementById("SKIPBTN").style.display = 'block';
     startBreak();
 }
 function startBreak()
@@ -208,12 +262,11 @@ function startBreak()
     // if session and breaks are done alert done message
     if(min==0 && sec==0)
     {
-        heading.innerHTML="Start";
-        document.querySelector('.line').style.background = 'green';
         clearTimeout(timerName);
-        alert("Break Over.You can start your session again!");
-        window.location.reload();
+        alert("Break over. You can start your session again!");
+        resetPomodoro();
         return;
     }
+    updateLine(parseInt(min)*60 + parseInt(sec), breakTotalSec, 150);
     timerName=setTimeout(startBreak,1000);
 }

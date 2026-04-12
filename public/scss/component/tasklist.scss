@@ -30,60 +30,46 @@
     font-weight: 700;
 }
   
-.header { 
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    .header-item {
-        font-size: 30px;
-    }
-    .dark-blue-btn { 
-        background: #142348;
-        padding: 11px 40px;
-        border: 2px solid #142348;
-    }
-    .dark-blue-btn:hover {
-        background: transparent;
-        color: #142348;
-        -webkit-transition: all 0.4s;
-        -moz-transition: all 0.4s;
-        transition: all 0.4s;
-    }
-}
-  
 .task {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 65px 1fr;
-    gap: 0px 0px;
-    grid-template-areas:
-        "task-header" "quadrants";
     grid-area: task;
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    border-radius: 30px;
+    overflow: hidden;
 }
   
-.fa-plus, .fa-check-circle, .fa-clock, .fa-user-plus, .fa-trash-alt{
-    margin-right: 20px;
+.fa-check-circle, .fa-clock, .fa-user-plus, .fa-trash-alt {
+    margin-right: 0;
 }
   
-.task-header { 
+.task-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-size: 20px;
-    margin-bottom: 25px;
+    flex-shrink: 0;
+    padding: 14px 20px 12px;
+    border-bottom: 1px solid rgba(20, 35, 72, 0.04);
+
+    h2 {
+        font-size: 19px;
+        font-weight: 700;
+        color: #142348;
+        margin: 0;
+    }
 }
   
 .quadrants {
+    flex: 1;
+    min-height: 0;
     display: grid;
     grid-template-columns: max-content;
-    grid-template-rows: 100px minmax(30px, 100%) minmax(30px, 100%);
+    grid-template-rows: 60px minmax(30px, 100%) minmax(30px, 100%);
     gap: 0px 0px;
     grid-template-areas:
         "space urgent not-urgent" "important cards cards" "not-important cards cards";
     grid-area: quadrants;
-    background-color: #ffff;
-    border-radius: 30px; 
-    padding-bottom: 50px;
+    padding-bottom: 12px;
 }
 
 .space { 
@@ -104,16 +90,22 @@
 .not-important { 
     grid-area: not-important;
 }
+.urgent h2, .not-urgent h2, .important h2, .not-important h2 {
+    font-size: 22px;
+    font-weight: 600;
+    color: rgba(20, 35, 72, 0.5);
+    margin: 0;
+}
 .urgent, .not-urgent{
-    padding: 30px 0px 15px;  // top, right/left, bottom
+    padding: 12px 0px 6px;
 }
 .important, .not-important {
-    // Chrome doesnt support CSS writing-mode: sideways-lr but accepts vertical 
+    // Chrome doesnt support CSS writing-mode: sideways-lr but accepts vertical
     // So I used to transform rotate to create what I wanted
     writing-mode: vertical-rl;
     transform: rotate(-180deg);
-    padding: 15px;
-    margin-top: 50px;
+    padding: 8px;
+    margin-top: 20px;
 }
 
 
@@ -122,11 +114,11 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
-    gap: 35px 35px;
+    gap: 14px 14px;
     grid-template-areas:
         "do-it-card schedule-card" "relegate-card dont-do-card";
     grid-area: cards;
-    padding-right: 50px; 
+    padding-right: 24px;
 
     .do-it-card { 
         grid-area: do-it-card;
@@ -152,65 +144,169 @@
     display: none;
 }
 .task-cards {
-    border-radius: 30px;  
-    padding: 40px;
+    border-radius: 20px;
+    padding: 18px 22px;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+
+    // The quadrant content wrapper (#do-it, #schedule, etc.)
+    // must grow to fill the remaining card height so .box can scroll.
+    > div {
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+    }
 }
 
-// quadrants ul li section
+.task-cards h2 {
+    font-size: 18px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    i { font-size: 0.75rem; opacity: 0.7; margin-right: 0; }
+    .cards-header-text { line-height: 1; }
+}
+
+// ── Task list box ──────────────────────────────────────────
+// flex: 1 + min-height: 0 lets it grow to fill the parent
+// (#do-it etc.) and scroll only once that space is full.
 .box {
     display: flex;
     flex-direction: column;
-    margin:0;
-    padding:0;
-    height: 180px;
-    overflow: hidden;
+    gap: 4px;
+    margin: 0;
+    padding: 0;
+    flex: 1;
+    min-height: 0;
     overflow-y: auto;
-
-    li {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        p {
-            padding: 0;
-            margin-right: 20px;
-        }
-    }
-    button {
-        padding: 0;
-        height: 45px;
-        width: 45px;
-        margin: 20px 5px;
-        
-    }
+    overflow-x: hidden;
 }
-    .emptyList {
-        font-size: 20px;
-    }
 
-// li buttons
-.delete-btn, .complete-btn {
-    background: coral;
-    color: white;
+// ── Task row ───────────────────────────────────────────────
+.itemDiv {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 6px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.55);
+    min-height: 28px;
+    list-style: none;
+}
+
+.task-text {
+    flex: 1;
+    font-size: 11px;
+    font-weight: 500;
+    color: #142348;
+    line-height: 1.35;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.task-date {
+    font-size: 10px;
+    color: rgba(20, 35, 72, 0.38);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+// ── Action buttons ─────────────────────────────────────────
+// Small icon-only buttons — present but not dominant.
+.complete-btn,
+.delete-btn {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
     border: none;
-    padding: 10px 13px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    border-radius: 50px;
+    padding: 0;
+    font-size: 9px;
+    transition: background 0.15s ease, opacity 0.15s ease;
+    letter-spacing: 0;
+
+    i { pointer-events: none; }
 }
+
 .complete-btn {
-    background: green;
+    background: rgba(52, 168, 83, 0.12);
+    color: rgba(30, 120, 60, 0.7);
+
+    &:hover {
+        background: rgba(52, 168, 83, 0.22);
+        color: #1e7840;
+    }
 }
+
+.delete-btn {
+    background: rgba(220, 60, 60, 0.08);
+    color: rgba(180, 50, 50, 0.55);
+
+    &:hover {
+        background: rgba(220, 60, 60, 0.18);
+        color: #b43232;
+    }
+}
+
+// ── Completed state ────────────────────────────────────────
 .completed {
-    text-decoration: line-through;
-    opacity: 0.5;
+    opacity: 0.45;
+
+    .task-text {
+        text-decoration: line-through;
+        color: rgba(20, 35, 72, 0.5);
+    }
 }
-.fa-trash, .fa-check {
-    pointer-events: none;
+
+// ── Drag and drop ──────────────────────────────────────────
+.itemDiv[draggable="true"] { cursor: grab; }
+.itemDiv[draggable="true"]:active { cursor: grabbing; }
+
+.itemDiv.dragging {
+    opacity: 0.35;
+}
+
+#do-it, #schedule, #relegate, #dont-do {
+    border-radius: 8px;
+    transition: background 0.15s;
+
+    &.drag-over {
+        background: rgba(20, 35, 72, 0.04);
+        outline: 1.5px dashed rgba(20, 35, 72, 0.18);
+        outline-offset: 2px;
+    }
+}
+
+// ── Empty state ────────────────────────────────────────────
+.emptyList {
+    font-size: 11px;
+    color: rgba(20, 35, 72, 0.3);
+    font-style: italic;
+    margin: 4px 0 0;
+    list-style: none;
+}
+
+.card-subtitle {
+    font-size: 0.68rem;
+    color: rgba(20, 35, 72, 0.4);
+    font-weight: 400;
+    margin: 4px 0 8px;
+    line-height: 1.4;
 }
 
 // Responsive
 @media only screen and (max-width: 921px) {
     .task-header {
-        margin: 25px 0;
+        padding: 20px 20px 16px;
     }
     .cards {
         display: block;
@@ -222,8 +318,7 @@
     }
     .quadrants {
         display: block;
-        padding: 0;
-        margin-top: 20px;
+        padding: 0 0 20px;
     }
     .urgent, .not-urgent{
         padding: 0;  // top, right/left, bottom

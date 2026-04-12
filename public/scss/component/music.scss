@@ -1,322 +1,37 @@
-*::before, *::after{
-    padding: 0;
-    margin: 0;
+// ── Music card ─────────────────────────────────────────────
+// The card's own overflow:hidden + border-radius:30px is the only visual
+// boundary. No inner tray — the embed sits directly in the card padding,
+// so it reads as card content rather than a boxed foreign widget.
+// min-height: 280px on the wrap prevents the embed collapsing below a
+// usable render size at smaller viewport heights.
+
+.music {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 18px 20px 16px;
 }
-.wrapper{
-    width: 100%;
-    height: 100%;
+
+.music-label {
+    font-size: 16px;
+    font-weight: 700;
+    color: #142348;
+    flex-shrink: 0;
+    margin-bottom: 10px;
+}
+
+.music-embed-wrap {
+    flex: 1;
+    min-height: 280px;
     overflow: hidden;
     position: relative;
-    i {
-        cursor: pointer;
-    }
-}
-.progress-area .song-timer, 
-.music-controls, .music-list .music-list-header, .music-list ul li{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-.song-container {
-    width: 100%;
-    height: 150px;
-    display: flex;
-}
-.song-img-box {
-    width: 40%;
 
-}
-.song-bio-box {
-    width: 60%;
-}
-
-.img-area{
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    border-radius: 15px;
-        img{
+    iframe {
+        position: absolute;
+        inset: 0;
         width: 100%;
         height: 100%;
-        object-fit: cover;
-        justify-content: center;
-        }
-}
-
-.song-details {
-    margin-top: 0;  
-    margin-left: 10px;
-    p {
-        color: #142348;
-        text-align: center;
-    }
-    .name {
-        font-size: 18px;
-        margin-top: 10px;
-        margin-bottom: 0;
-    }
-    .artist{
-        font-size: 14px;
-        opacity: 0.9;
-        line-height: 35px;
-    }
-}
-.process-container {
-    margin-top: 15%;
-}
-.progress-area{
-    height: 7px;
-    width: 100%;
-    border-radius: 50px;
-    background: #f0f0f0;
-    cursor: pointer;
-}
-.progress-area .progress-bar{
-    height: inherit;
-    width: 0%;
-    position: relative;
-    border-radius: inherit;
-    background: rgb(247, 199, 39) ;
-}
-.progress-bar::before{
-    content: "";
-    position: absolute;
-    height: 12px;
-    width: 12px;
-    border-radius: 50%;
-    top: 50%;
-    right: -5px;
-    z-index: 2;
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(-50%);
-    background: inherit;
-    transition: opacity 0.2s ease;
-}
-.progress-area:hover .progress-bar::before{
-    opacity: 1;
-    pointer-events: auto;
-}
-.progress-area .song-timer{
-    margin-top: 2px;
-}
-.song-timer span{
-    font-size: 13px;
-    color: #142348;
-    margin-top: 5px;
-}
-.music-controls{
-    margin: 50px 0 5px 0;
-    i {
-        font-size: 28px;
-        user-select: none;
-        background: #142348;
-        background-clip: text;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        
-        :nth-child(2),
-        :nth-child(4) {
-            font-size: 43px;
-        }
-    }
-    #prev {
-        margin-right: -13px;
-    }
-    #next {
-        margin-left: -13px;
-    }
-    .play-pause {
-        height: 54px;
-        width: 54px;
-        display: flex;
-        cursor: pointer;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        background: white;
-    }
-}
-
-.play-pause::before {
-    position: absolute;
-    content: "";
-    height: 43px;
-    width: 43px;
-    border-radius: inherit;
-    background: rgb(247, 199, 39);
-}
-.play-pause:hover {
-    opacity: 0.7;
-}
-#repeat-plist:hover, #prev:hover, #next:hover, #more-music:hover {
-    background-color: rgb(247, 199, 39);
-}
-.material-icons {
-    color: #142348;
-}
-#music-list-close:hover {
-    color: rgb(247, 199, 39);
-}
-.play-pause i {
-    height: 43px;
-    width: 43px;
-    line-height: 43px;
-    text-align: center;
-    background: inherit;
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    position: absolute;
-}
-
-.music-list {
-    position: absolute;
-    width: 100%;
-    height: 50%;
-    left: 0;
-    bottom: 0;
-    opacity: 0;
-    pointer-events: none;
-    z-index: 5;
-    padding: 15px 30px;
-    border-radius: 15px;
-    border: 1px solid #142348;
-    transition: all 0.15s ease-out;
-    background-color: white;
-}
-.music-list.show {
-    bottom: 0;
-    opacity: 1;
-    pointer-events: auto;
-}
-
-.music-list-header .music-list-row {
-    display: flex;
-    align-items: center;
-    font-size: 19px;
-    color: #142348;
-    i {
-        cursor: default;
-    }
-    span {
-        margin-left: 5px;
-    }
-}
-
-.music-list-header #music-list-close {
-    font-size: 22px;
-    color: #142348;
-}
-.music-list ul {
-    margin: 10px 0;
-    max-height: 100px;
-    overflow: auto;
-}
-.music-list ul li {
-    list-style: none;
-    display: flex;
-    cursor: pointer;
-    padding-bottom: 10px;
-    margin-bottom: 5px;
-    color: #142348;
-    border-bottom: 1px solid #E5E5E5;
-    :last-child{
-        border-bottom: 0px;
-    }
-    .music-list-row span{
-        font-size: 20px;
-    }
-    .music-list-row p{
-        opacity: 0.9;
-        font-size: 14px;
-    }
-}
-ul li .audio-duration{
-    font-size: 13px;
-    padding-right: 12px;
-}
-ul li.playing{
-    pointer-events: none;
-    color: rgb(247, 199, 39);
-}
-
-// Responsive
-@media only screen and (max-width: 1512px) {
-    .song-container {
-        height: 300px;
-    }
-    .song-img-box {
-        width: 70%;
-    }
-    .song-bio-box {
-        width: 70%;
-    }
-    .song-details {
-         margin-top: 10%;
-        .name {
-            font-size: 40px;
-        }
-        .artist {
-            font-size: 20px;
-        }
-    }
-    .process-container {
-        margin-top: 3%;
-    }
-
-}
-
-@media only screen and (max-width: 850px) {
-    .song-details {
-        margin-top: 35%;
-       .name {
-           font-size: 20px;
-       }
-       .artist {
-           font-size: 8px;
-       }
-   }
-}
-
-@media only screen and (max-width: 490px) {
-    .music {
-        padding: 35px;
-    }
-    .song-container {
-        height: 200px;
-    }
-    .song-details {
-        margin-top: 45px;
-       .name {
-           font-size: 18px;
-       }
-       .artist {
-           font-size: 6px;
-       }
-   }
-    .process-container {
-        margin-top: 20px;
-    }
-}
-
-@media only screen and (max-width: 375px) {
-    .song-container {
-        height: 130px;
-    }
-    .song-details {
-        margin-top: 10px;
-       .name {
-           font-size: 6px;
-       }
-       .artist {
-           font-size: 1px;
-       }
-       .name, .artist {
-           margin: 0%;
-       }
-   }
-    .process-container {
-        margin-top: 20px;
+        display: block;
+        border: none;
     }
 }

@@ -47,13 +47,22 @@ timerNav.links.forEach(function(link) {
     span[1].onclick = function() {
         modal[1].style.display = "none";
     }
-    // When the user clicks anywhere outside of the modal, close it
+    // Close intro modal on backdrop click
+    // Close drawer when clicking the overlay area (outside the drawer panel)
     window.onclick = function(event) {
         if (event.target == modal[0]) {
             modal[0].style.display = "none";
         }
         if (event.target == modal[1]) {
             modal[1].style.display = "none";
-        }  
+        }
     }
+
+    // Escape key closes whichever modal/drawer is open
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            modal[0].style.display = 'none';
+            modal[1].style.display = 'none';
+        }
+    });
 

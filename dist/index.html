@@ -13,11 +13,10 @@
 	<div class="grid-container">
 		<div class="header">
 		  <div class="header-item">
-			<h1>StudBud</h1>
+			<span class="site-logo">StudBud</span>
 		  </div>
 		  <div class="header-item">
-			<!-- Trigger/Open The Modal -->
-			<button class="openBtn dark-blue-btn">Introduction</button>
+			<button class="openBtn intro-btn">About</button>
 				<!-- The Modal -->
 				<div class="modal intro-modal">
 					<!-- Modal content -->
@@ -68,11 +67,14 @@
 							<div class="sBtn" id="PBTN" style="display: none"> 
 								<button id="pomo-pause-button" class="mainBtns">Pause</button> 
 							</div>
-							<div class="sBtn" id="CBTN" style="display: none"> 
-								<button id="pomo-continue-button" class="mainBtns">Resume</button> 
+							<div class="sBtn" id="CBTN" style="display: none">
+								<button id="pomo-continue-button" class="mainBtns">Resume</button>
 							</div>
-							<div class="rBtn"> 
-								<button id="pomo-reset-button" class="mainBtns">Reset</button> 
+							<div class="sBtn" id="SKIPBTN" style="display: none">
+								<button id="pomo-skip-button" class="mainBtns">Skip</button>
+							</div>
+							<div class="rBtn">
+								<button id="pomo-reset-button" class="mainBtns">Reset</button>
 							</div>
 						</div>
 					</div>
@@ -98,81 +100,85 @@
 			</div>
 			<div id="stopwatch" class="timer-page-container">
 				<div class="stopwatch-container">
-					<span class="stopwatch">00:00:00:00</span>
-					<div class="stopwatch-controls">
-					  <button id="stopwatch-main-button" class="mainBtns">Start</button>
-					  <button id="stopwatch-reset-button" class="mainBtns">Clear</button>
+					<div class="sw-timer-section">
+						<span class="stopwatch">00:00:00:00</span>
+						<div class="stopwatch-controls">
+						  <button id="stopwatch-main-button" class="mainBtns">Start</button>
+						  <button id="stopwatch-lap-button" class="mainBtns">Lap</button>
+						  <button id="stopwatch-reset-button" class="mainBtns">Clear</button>
+						</div>
+					</div>
+					<div class="sw-laps">
+						<p class="sw-laps-label">Laps</p>
+						<p class="sw-laps-empty">Tap Lap while running to record a lap</p>
+						<ul class="sw-lap-list"></ul>
 					</div>
 				</div>
 			</div>
 		  </div>
 		  <div class="music">
-			<div class="wrapper">
-				<div class="song-container">
-				  <div class="song-img-box">
-					<div class="img-area">
-					  <img alt="">
-					</div>
-				  </div>
-				  <div class="song-bio-box">
-					<div class="song-details">
-					  <p class="name"></p>
-					  <p class="artist"></p>
-					</div>
-				  </div>
-				</div>
-				<div class="process-container">
-					<div class="progress-area">
-						<div class="progress-bar">
-							<audio id="main-audio"></audio>
-						</div>
-						<div class="song-timer">
-							<span class="current-time">0:00</span>
-							<span class="max-duration">0:00</span>
-						</div>
-					</div>
-				</div>
-				<div class="music-controls">
-				  <i id="repeat-plist" class="material-icons" title="Playlist looped">repeat</i>
-				  <i id="prev" class="material-icons">skip_previous</i>
-				  <div class="play-pause">
-					<i class="material-icons music-play">play_arrow</i>
-				  </div>
-				  <i id="next" class="material-icons">skip_next</i>
-				  <i id="more-music" class="material-icons">queue_music</i>
-				</div>
-				<div class="music-list">
-				  <div class="music-list-header">
-					<div class="music-list-row">
-					  <i class="list material-icons">queue_music</i>
-					  <span>Music list</span>
-					</div>
-					<i id="music-list-close" class="material-icons">close</i>
-				  </div>
-				  <ul>
-					<!-- li list are coming from js -->
-				  </ul>
-				</div>
-			  </div>					
+			<div class="music-label">Now Playing</div>
+			<div class="music-embed-wrap">
+				<iframe data-testid="embed-iframe" src="https://open.spotify.com/embed/album/6oXxmHlIYxA9Qh7AxPKWM1?utm_source=generator" width="100%" height="352" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+			</div>
 		  </div>
 		  <div class="dictionary">
-				<h2>Dictionary</h2>
-				<div class="dictionary-form-wrap">
-					<div class="search-container">
-						<input type="text" placeholder="Search: help" id="input">
-						<button type="submit" class="search-btn" id="search"><i class="fa fa-search"></i></button>
-					</div>
+				<div class="dict-header">
+					<h2>Dictionary</h2>
+				</div>
+				<div class="search-container">
+					<i class="fa fa-search search-icon"></i>
+					<input type="text" placeholder="Look up a word…" id="input" autocomplete="off">
 				</div>
 				<section class="data dictionary-conatiner">
-					<span class="loading">Loading...</span>
+					<span class="loading"><i class="fas fa-circle-notch fa-spin"></i> Looking up…</span>
 					<div class="not-found"></div>
-					<p class="bold">Definition</p>
-					<p class="def"></p>
-					<p class="bold">Synoymns</p>
-					<p class="syns"></p>
+					<p class="dict-placeholder">Search a word above to see its definition and synonyms.</p>
+					<div class="dict-result" style="display: none">
+						<p class="dict-word"></p>
+						<p class="dict-label">Definition</p>
+						<p class="def"></p>
+						<div class="dict-syns">
+							<p class="dict-label">Synonyms</p>
+							<p class="syns"></p>
+						</div>
+					</div>
 				</section>
 			</div>
 		  </div>
+
+		<!-- Add Task drawer — sits outside .task so it overlays the full page -->
+		<div class="modal task-modal drawer-overlay">
+			<div class="drawer">
+				<div class="drawer-header">
+					<h2>New Task</h2>
+					<button class="drawer-close closeBtn" aria-label="Close"><i class="fas fa-times"></i></button>
+				</div>
+				<form id="taskform" class="drawer-form">
+					<label for="taskInput">Task name</label>
+					<input type="text" name="task" id="taskInput" placeholder="What needs doing?" required="">
+
+					<label for="dueDateInput">Due date</label>
+					<input type="date" name="dueDate" id="dueDateInput">
+
+					<label for="completionTimeInput">Due time</label>
+					<input type="time" name="completionTime" id="completionTimeInput">
+
+					<label for="estimatedTimeInput">Estimated time (mins)</label>
+					<input type="number" name="estimatedTime" id="estimatedTimeInput" placeholder="e.g. 30">
+
+					<label for="priorityInput">Priority</label>
+					<select name="prority" id="priorityInput">
+						<option value="">Select priority</option>
+						<option value="Low">Low</option>
+						<option value="Medium">Medium</option>
+						<option value="High">High</option>
+					</select>
+
+					<button class="drawer-submit" type="submit">Add Task</button>
+				</form>
+			</div>
+		</div>
 
 		<div class="task">
 			<div class="task-header">
@@ -180,43 +186,10 @@
 					<h2>Today's Task List</h2>
 				</div>
 				<div class="header-item">
-					<!-- Trigger/Open The Modal -->
-					<button class="openBtn light-blue-btn"><i class="fas fa-plus"></i><span class="taskBtnText">Add Tasks</span></button>
+					<button class="openBtn task-add-btn"><i class="fas fa-plus"></i><span class="taskBtnText">Add Task</span></button>
 				</div>
 			</div>
 			<div class="quadrants">
-				<!-- The Modal -->
-				<div class="modal task-modal">
-					<!-- Modal content -->
-					<span class="closeBtn fas fa-times"></span>
-					<div id="task-grid"> 
-						<form id="taskform">
-							<label for="task">Task:</label>
-							<input type="text" name="task" id="taskInput" required="">
-						
-							<!-- Date input -->
-							<label for="dueDate">Due Date: </label>
-							<input type="date" name="dueDate" id="dueDateInput">
-
-							<!-- Time input -->
-							<label for="completionTime">Completion Time: </label>
-							<input type="time" name="completionTime" id="completionTimeInput">
-						
-							<label for="estimatedTime">Estimated completion time (in mins):</label>
-							<input type="number" name="estimatedTime" id="estimatedTimeInput">
-							
-							<!-- Priority -->
-							<label for="priority">Task Priority:</label>
-							<select name="prority" id="priorityInput">
-								<option value="">Select one</option>
-								<option value="Low">Low</option>
-								<option value="Medium">Medium</option>
-								<option value="High">High</option>
-							</select>
-							<button class="light-blue-btn" type="submit">Submit</button>
-						</form>
-					</div>
-				</div>
 				<div class="space"></div>
 				<div class="urgent">
 					<h2>Urgent</h2>
@@ -231,35 +204,39 @@
 					<h2>Not Important</h2>
 				</div>
 				<div class="cards">
-					<span class="responsive-card-text">Urgent &amp; Important</span>
+					<span class="responsive-card-text">Do Now</span>
 					<div class="task-cards do-it-card fa-sm">
-						<h2><i class="far fa-check-circle"></i><span class="cards-header-text">Do it</span></h2>
+						<h2><i class="far fa-check-circle"></i><span class="cards-header-text">Do Now</span></h2>
+						<p class="card-subtitle">Urgent &amp; important</p>
 						<div id="do-it">
-							<p class="emptyList">You have not added any tasks yet</p>
+							<p class="emptyList">Nothing here yet</p>
 							<ul class="box"></ul>
 						</div>
 					</div>
-					<span class="responsive-card-text">Not Urgent &amp; Important</span>
+					<span class="responsive-card-text">Schedule</span>
 					<div class="task-cards schedule-card">
 						<h2><i class="far fa-clock fa-sm"></i><span class="cards-header-text">Schedule</span></h2>
+						<p class="card-subtitle">Important, not urgent</p>
 						<div id="schedule">
-							<p class="emptyList">You have not added any tasks yet</p>
+							<p class="emptyList">Nothing here yet</p>
 							<ul class="box"></ul>
 						</div>
 					</div>
-					<span class="responsive-card-text">Urgent &amp; Not Important</span>
+					<span class="responsive-card-text">Delegate</span>
 					<div class="task-cards relegate-card">
-						<h2><i class="fas fa-user-plus fa-sm"></i><span class="cards-header-text">Relegate</span></h2>
+						<h2><i class="fas fa-user-plus fa-sm"></i><span class="cards-header-text">Delegate</span></h2>
+						<p class="card-subtitle">Urgent, not important</p>
 						<div id="relegate">
-							<p class="emptyList">You have not added any tasks yet</p>
+							<p class="emptyList">Nothing here yet</p>
 							<ul class="box"></ul>
 						</div>
 					</div>
-					<span class="responsive-card-text">Not Urgent &amp; Not Important</span>
+					<span class="responsive-card-text">Eliminate</span>
 					<div class="task-cards dont-do-card fa-sm">
-						<h2><i class="fas fa-trash-alt"></i><span class="cards-header-text">Don't Do</span></h2>
+						<h2><i class="fas fa-trash-alt"></i><span class="cards-header-text">Eliminate</span></h2>
+						<p class="card-subtitle">Neither urgent nor important</p>
 						<div id="dont-do">
-							<p class="emptyList">You have not added any tasks yet</p>
+							<p class="emptyList">Nothing here yet</p>
 							<ul class="box"></ul>
 						</div>
 					</div>
