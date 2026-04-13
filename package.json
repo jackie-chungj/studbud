@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ychu8081-web/studbud.git"
+    "url": "git+https://github.com/jackie-chungj/studbud.git"
   },
   "keywords": [
     "study",
@@ -20,9 +20,9 @@
   "author": "Jackie Chung",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ychu8081-web/studbud/issues"
+    "url": "https://github.com/jackie-chungj/studbud/issues"
   },
-  "homepage": "https://github.com/ychu8081-web/studbud#readme",
+  "homepage": "https://jackie-chungj.github.io/studbud/",
   "dependencies": {
     "dotenv": "^17.4.1",
     "express": "^4.17.1",
