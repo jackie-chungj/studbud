@@ -394,19 +394,32 @@ button {
   .grid-container {
     height: max-content;
     display: block;
-    padding: 24px;
+    padding: 20px;
   }
   .header {
-    padding-bottom: 32px;
+    padding-bottom: 20px;
   }
   .features {
     display: block;
   }
   .timer, .music, .dictionary {
-    margin: 0 0 24px 0;
+    margin: 0 0 16px 0;
+  }
+  // Fixed height so the embed fills the card without dead space below
+  .music {
+    height: 380px;
+  }
+}
+
+@media only screen and (max-width: 570px) {
+  .grid-container {
+    padding: 14px;
+  }
+  .timer, .music, .dictionary {
+    margin: 0 0 12px 0;
   }
   .music {
-    min-height: 420px;
+    height: 340px;
   }
 }
 
@@ -441,12 +454,9 @@ button {
 }
 
 @media only screen and (max-width: 570px) {
-  .grid-container {
-    padding: 20px;
-  }
   .mainBtns {
     font-size: 10px;
     font-weight: 500;
-    padding: 11px 20px;
+    width: 90px;
   }
 }

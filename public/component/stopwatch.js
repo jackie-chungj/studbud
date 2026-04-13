@@ -1,4 +1,5 @@
 // Reference - learnt from = Chris (2021). stopwatch using javascript - accurate and easy. [online] dev.to. Available at: https://dev.to/chrislemus/stopwatch-using-javascript-accurate-and-easy-5ado
+import { playSwSound } from './sound.js';
 
 const swTime = document.querySelector('.stopwatch')
 const swMainButton = document.querySelector('#stopwatch-main-button')
@@ -19,11 +20,13 @@ swMainButton.addEventListener('click', () => {
     startStopwatch()
     swMainButton.innerHTML = 'Stop'
     lapButton.disabled = false
+    playSwSound('start')
   } else {
     stopwatch.elapsedTime += Date.now() - stopwatch.startTime
     clearInterval(stopwatch.intervalId)
     swMainButton.innerHTML = 'Start'
     lapButton.disabled = true
+    playSwSound('stop')
   }
 })
 
@@ -31,6 +34,7 @@ lapButton.addEventListener('click', () => {
   lapCount++
   renderLap(lapCount, swTime.innerHTML)
   updateLapEmpty()
+  playSwSound('lap')
 })
 
 clearButton.addEventListener('click', () => {
@@ -40,6 +44,7 @@ clearButton.addEventListener('click', () => {
   lapCount = 0
   swLapList.innerHTML = ''
   updateLapEmpty()
+  playSwSound('clear')
 })
 
 function startStopwatch() {

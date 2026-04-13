@@ -306,22 +306,22 @@
 // Responsive
 @media only screen and (max-width: 921px) {
     .task-header {
-        padding: 20px 20px 16px;
+        padding: 12px 16px 10px;
     }
     .cards {
         display: block;
-        padding: 0 30px;
+        padding: 0 16px;
         .task-cards {
-            margin: 0 0 30px 0;
-            padding: 15px 25px 15px 25px;
+            margin: 0 0 12px 0;
+            padding: 14px 16px;
         }
     }
     .quadrants {
         display: block;
-        padding: 0 0 20px;
+        padding: 0 0 12px;
     }
-    .urgent, .not-urgent{
-        padding: 0;  // top, right/left, bottom
+    .urgent, .not-urgent {
+        padding: 0;
         display: none;
     }
     .important, .not-important {
@@ -329,69 +329,46 @@
         transform: rotate(0deg);
         display: none;
         padding: 0;
-        margin: 0%;
+        margin: 0;
     }
+    // Section label shown above each card on mobile (e.g. "Do Now")
     .cards .responsive-card-text {
         display: block;
-        font-size: 35px;
-        text-align: center;
-        margin: 30px 0 0 0;
-        font-weight: 500;
-        color: #142348;
+        font-size: 20px;
+        text-align: left;
+        margin: 14px 0 4px 16px;
+        font-weight: 600;
+        color: rgba(20, 35, 72, 0.55);
     }
     .task-cards {
-        padding: 20px;
-        margin: 0 0 30px 0;
+        padding: 14px 16px;
+        margin: 0 0 12px 0;
+    }
+    .task-cards h2 {
+        font-size: 15px;
+    }
+    .card-subtitle {
+        font-size: 0.65rem;
+        margin: 2px 0 6px;
     }
 }
 
-@media only screen and (max-width: 651px) {
-    .header {
-        padding-bottom: 30px;
-        h1 {
-          font-size: 35px;
-        }
-        .dark-blue-btn {
-          font-size: 15px;
-          font-weight: 500;
-        }
-      }
+@media only screen and (max-width: 570px) {
+    .task-header h2 {
+        font-size: 16px;
+    }
     .cards .responsive-card-text {
-        display: block;
-        font-size: 30px;
-        text-align: center;
-        margin: 30px 0 0 0;
-        font-weight: 500;
-        color: #142348;
+        font-size: 17px;
+        margin: 10px 0 4px 14px;
     }
-    .task-cards .cards-header-text {
-        font-size: 30px;
+    .task-cards {
+        padding: 12px 14px;
+        margin: 0 0 10px 0;
     }
-}
-
-@media only screen and (max-width: 475px) {
-    .header-item  h2 {
-        font-size: 1.15rem;
+    .task-cards h2 {
+        font-size: 14px;
     }
-    .header-item .light-blue-btn {
-        background-color: #65adfc;
-        border: 2px solid #65adfc;
-        background: #65adfc;
-        padding: 11px 11px;
-        .fa-plus {
-            margin-right: 0px;
-        }
-        .taskBtnText {
-            display: none;
-        }
-    }    
-    .cards .responsive-card-text {
-        font-size: 20px;
-    }
-    .task-cards .cards-header-text {
-        font-size: 25px;
-    }
-    .fa-plus, .fa-check-circle, .fa-clock, .fa-user-plus, .fa-trash-alt{
-        height: 10px;
+    .cards {
+        padding: 0 14px;
     }
 }

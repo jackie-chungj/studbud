@@ -19,7 +19,7 @@
         .line {
             height: 4px;
             background: red;
-            width: 150px;
+            width: 180px;
             margin: 0 auto 12px;
             border-radius: 2px;
             transition: width 1.05s linear, background 0.5s ease;
@@ -57,12 +57,12 @@
         display: flex;
         justify-content: center;
         flex-direction: column;
-        gap: 28px;
-        padding: 0 24px;
+        gap: 20px;
+        padding: 0 20px;
         .pomo-setting-flex {
             justify-content: center;
             p {
-                margin: 0 0 8px;
+                margin: 0 0 6px;
             }
         }
         .session, .break {
@@ -76,7 +76,7 @@
             width: 100%;
         }
         .session p, .break p {
-            margin: 0 24px;
+            margin: 0 16px;
             font-size: 18px;
         }
         .pomo-setting-btn {
@@ -88,6 +88,37 @@
             font-weight: bold;
             color: white;
             border-radius: 100%;
+        }
+        .pomo-setting-footer {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-top: 4px;
+        }
+        .pomo-secondary-btn {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            color: rgba(20, 35, 72, 0.45);
+            background: rgba(20, 35, 72, 0.05);
+            border: none;
+            border-radius: 20px;
+            padding: 5px 14px;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+            font-family: inherit;
+            &:hover:not(:disabled) {
+                background: rgba(20, 35, 72, 0.1);
+                color: #142348;
+            }
+            &:disabled {
+                opacity: 0.35;
+                cursor: default;
+            }
+            &.pomo-sound-active {
+                color: #142348;
+                background: rgba(20, 35, 72, 0.08);
+            }
         }
     }
   }
@@ -109,28 +140,67 @@
         width: 100%;
         padding: 0;
         justify-content: center;
-        gap: 32px;
+        align-items: flex-start;
+        gap: 28px;
+        flex-wrap: wrap;
         .pomo-setting-flex {
             text-align: center;
         }
-    }
-}
-
-// ── Mobile (grid already stacked to single column at 900px)
-@media only screen and (max-width: 800px) {
-    .pomodoro-container .time {
-        margin: 0px;
-    }
-    .pomo-setting-container {
-        .pomo-setting-flex {
-            margin-top: 0;
+        .pomo-setting-footer {
+            width: 100%;
+            justify-content: center;
+            padding-top: 0;
         }
     }
 }
 
-@media only screen and (max-width: 490px) {
-    #TIME {
-        font-size: 55px;
+// ── Mobile (grid stacked to single column at 900px)
+@media only screen and (max-width: 900px) {
+    .pomodoro-container .time {
+        margin: 0 0 4px;
+        .line {
+            width: 140px;
+            margin-bottom: 8px;
+        }
+    }
+    .pomodoro-container .time p {
+        font-size: 52px;
+    }
+    .pomodoro-container .time h3 {
+        font-size: 16px;
+        margin-top: 2px;
+        margin-bottom: 8px;
+    }
+    .pomo-setting-container {
+        gap: 14px;
+        .pomo-setting-flex p {
+            margin-bottom: 4px;
+            font-size: 12px;
+        }
+        .session p, .break p {
+            font-size: 16px;
+            margin: 0 10px;
+        }
+        .pomo-setting-btn {
+            height: 28px;
+            width: 28px;
+            font-size: 18px;
+        }
+        .pomo-setting-footer {
+            padding-top: 0;
+        }
+    }
+}
+
+@media only screen and (max-width: 570px) {
+    .pomodoro-container .time p {
+        font-size: 44px;
+    }
+    .pomodoro-container .time h3 {
+        font-size: 14px;
+    }
+    .pomo-setting-container {
+        gap: 10px;
     }
 }
   
