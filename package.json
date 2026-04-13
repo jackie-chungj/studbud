@@ -4,8 +4,9 @@
   "description": "studbud",
   "scripts": {
     "start": "node server.js",
-    "prestart": "parcel build ./public/index.html",
-    "dev": "parcel serve ./public/index.html"
+    "prestart": "parcel build ./public/index.html --dist-dir dist",
+    "dev": "parcel serve ./public/index.html",
+    "build": "parcel build ./public/index.html --dist-dir dist"
   },
   "repository": {
     "type": "git",

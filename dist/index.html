@@ -1,30 +1,19 @@
-<!DOCTYPE html><html><head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width">
-	<title>studBud</title>
-	<link href="/public.c74267d1.css" rel="stylesheet" type="text/css">
-	<!-- Font Awesome Icon -->
-	<script src="https://kit.fontawesome.com/438023e851.js" crossorigin="anonymous"></script>
-	<!-- Google Icon -->
-	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-</head>
-
-<body class="app-container">
-	<div class="grid-container">
-		<div class="header">
-		  <div class="header-item">
-			<span class="site-logo">StudBud</span>
+<!DOCTYPE html><meta charset=utf-8><meta name=viewport content="width=device-width"><title>studBud</title><link href=/public.6ee2dd14.css rel=stylesheet><script src=https://kit.fontawesome.com/438023e851.js crossorigin=anonymous></script><link rel=stylesheet href="https://fonts.googleapis.com/icon?family=Material+Icons"><body class=app-container>
+	<div class=grid-container>
+		<div class=header>
+		  <div class=header-item>
+			<span class=site-logo>StudBud</span>
 		  </div>
-		  <div class="header-item">
-			<button class="openBtn intro-btn">About</button>
-				<!-- The Modal -->
-				<div class="modal intro-modal">
-					<!-- Modal content -->
-					<div class="intro-content">
-						<span class="closeBtn fas fa-times"></span>
-						<div class="intro-text">
+		  <div class=header-item>
+			<button class="intro-btn openBtn">About</button>
+				
+				<div class="intro-modal modal">
+					
+					<div class=intro-content>
+						<span class="closeBtn fa-times fas"></span>
+						<div class=intro-text>
 							<h2>Introduction</h2>
-							<ul class="intro-detail">
+							<ul class=intro-detail>
 								<h2>Pomodoro</h2>
 								<li>A time management system that encourages people to work with the time they have and have and adjustable breaks and sessions.</li>
 								<li>Help complete tasks without distractions, improves productivity and time management.</li>
@@ -44,201 +33,201 @@
 				</div>
 		  </div>
 		</div>
-		<div class="features">
-		  <div class="timer">
-			<nav class="timer-nav">
-				<ul class="timer-links">
-					<li class="timer-nav-item"><a href="#pomodoro" class="active">Pomodoro</a></li>
-					<li class="timer-nav-item"><a href="#stopwatch">Stop Watch</a></li>
+		<div class=features>
+		  <div class=timer>
+			<nav class=timer-nav>
+				<ul class=timer-links>
+					<li class=timer-nav-item><a href=#pomodoro class=active>Pomodoro</a></li>
+					<li class=timer-nav-item><a href=#stopwatch>Stop Watch</a></li>
 				</ul>
 			</nav>
-			<div id="pomodoro" class="timer-page-container">
-				<div class="pomodoro-container" id="pomodoro-container">
-					<div class="time-container">
-						<div class="time">
-							<p id="TIME" class="min">25:00</p>
-							<div class="line"></div>
-							<h3 id="pomo-text">Start Working!</h3>
+			<div id=pomodoro class=timer-page-container>
+				<div class=pomodoro-container id=pomodoro-container>
+					<div class=time-container>
+						<div class=time>
+							<p id=TIME class=min>25:00</p>
+							<div class=line></div>
+							<h3 id=pomo-text>Start Working!</h3>
 						</div>
-						<div class="pomo-controller">
-							<div class="sBtn" id="SBTN" style="display: block">
-								<button id="pomo-start-button" class="mainBtns">Start</button>
+						<div class=pomo-controller>
+							<div class=sBtn id=SBTN style=display:block>
+								<button id=pomo-start-button class=mainBtns>Start</button>
 							</div>
-							<div class="sBtn" id="PBTN" style="display: none">
-								<button id="pomo-pause-button" class="mainBtns">Pause</button>
+							<div class=sBtn id=PBTN style=display:none>
+								<button id=pomo-pause-button class=mainBtns>Pause</button>
 							</div>
-							<div class="sBtn" id="CBTN" style="display: none">
-								<button id="pomo-continue-button" class="mainBtns">Resume</button>
+							<div class=sBtn id=CBTN style=display:none>
+								<button id=pomo-continue-button class=mainBtns>Resume</button>
 							</div>
-							<div class="rBtn">
-								<button id="pomo-reset-button" class="mainBtns">Reset</button>
+							<div class=rBtn>
+								<button id=pomo-reset-button class=mainBtns>Reset</button>
 							</div>
 						</div>
 					</div>
-					<div class="pomo-setting-container">
-						<div class="pomo-setting-flex">
+					<div class=pomo-setting-container>
+						<div class=pomo-setting-flex>
 							<p>Session Time</p>
-							<div class="session">
-								<button id="plusSession" class="pomo-setting-btn">+</button>
-								<p id="STIME">25 min</p>
-								<button id="minusSession" class="pomo-setting-btn">-</button>
+							<div class=session>
+								<button id=plusSession class=pomo-setting-btn>+</button>
+								<p id=STIME>25 min</p>
+								<button id=minusSession class=pomo-setting-btn>-</button>
 							</div>
 						</div>
-						<div class="pomo-setting-flex">
+						<div class=pomo-setting-flex>
 							<p>Break Time</p>
-							<div class="break">
-								<button id="plusBreak" class="pomo-setting-btn">+</button>
-								<p id="BTIME">5 min</p>
-								<button id="minusBreak" class="pomo-setting-btn">-</button>
+							<div class=break>
+								<button id=plusBreak class=pomo-setting-btn>+</button>
+								<p id=BTIME>5 min</p>
+								<button id=minusBreak class=pomo-setting-btn>-</button>
 							</div>
 						</div>
-						<div class="pomo-setting-footer">
-							<button id="pomo-skip-button" class="pomo-secondary-btn" disabled="">Skip</button>
-							<button id="pomo-sound-toggle" class="pomo-secondary-btn pomo-sound-active">Sound on</button>
+						<div class=pomo-setting-footer>
+							<button id=pomo-skip-button class=pomo-secondary-btn disabled>Skip</button>
+							<button id=pomo-sound-toggle class="pomo-secondary-btn pomo-sound-active">Sound on</button>
 						</div>
 					</div>
 				</div>
 			</div>
-			<div id="stopwatch" class="timer-page-container">
-				<div class="stopwatch-container">
-					<div class="sw-timer-section">
-						<span class="stopwatch">00:00:00:00</span>
-						<div class="stopwatch-controls">
-						  <button id="stopwatch-main-button" class="mainBtns">Start</button>
-						  <button id="stopwatch-lap-button" class="mainBtns">Lap</button>
-						  <button id="stopwatch-reset-button" class="mainBtns">Clear</button>
+			<div id=stopwatch class=timer-page-container>
+				<div class=stopwatch-container>
+					<div class=sw-timer-section>
+						<span class=stopwatch>00:00:00:00</span>
+						<div class=stopwatch-controls>
+						  <button id=stopwatch-main-button class=mainBtns>Start</button>
+						  <button id=stopwatch-lap-button class=mainBtns>Lap</button>
+						  <button id=stopwatch-reset-button class=mainBtns>Clear</button>
 						</div>
 					</div>
-					<div class="sw-laps">
-						<p class="sw-laps-label">Laps</p>
-						<p class="sw-laps-empty">Tap Lap while running to record a lap</p>
-						<ul class="sw-lap-list"></ul>
+					<div class=sw-laps>
+						<p class=sw-laps-label>Laps</p>
+						<p class=sw-laps-empty>Tap Lap while running to record a lap</p>
+						<ul class=sw-lap-list></ul>
 					</div>
 				</div>
 			</div>
 		  </div>
-		  <div class="music">
-			<div class="music-label">Now Playing</div>
-			<div class="music-embed-wrap">
-				<iframe data-testid="embed-iframe" src="https://open.spotify.com/embed/album/6oXxmHlIYxA9Qh7AxPKWM1?utm_source=generator" width="100%" height="352" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+		  <div class=music>
+			<div class=music-label>Now Playing</div>
+			<div class=music-embed-wrap>
+				<iframe data-testid=embed-iframe src="https://open.spotify.com/embed/album/6oXxmHlIYxA9Qh7AxPKWM1?utm_source=generator" width=100% height=352 frameborder=0 allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading=lazy></iframe>
 			</div>
 		  </div>
-		  <div class="dictionary">
-				<div class="dict-header">
+		  <div class=dictionary>
+				<div class=dict-header>
 					<h2>Dictionary</h2>
 				</div>
-				<div class="search-container">
+				<div class=search-container>
 					<i class="fa fa-search search-icon"></i>
-					<input type="text" placeholder="Look up a word…" id="input" autocomplete="off">
+					<input placeholder="Look up a word…" id=input autocomplete=off>
 				</div>
 				<section class="data dictionary-conatiner">
-					<span class="loading"><i class="fas fa-circle-notch fa-spin"></i> Looking up…</span>
-					<div class="not-found"></div>
-					<p class="dict-placeholder">Search a word above to see its definition and synonyms.</p>
-					<div class="dict-result" style="display: none">
-						<p class="dict-word"></p>
-						<p class="dict-label">Definition</p>
-						<p class="def"></p>
-						<div class="dict-syns">
-							<p class="dict-label">Synonyms</p>
-							<p class="syns"></p>
+					<span class=loading><i class="fa-circle-notch fa-spin fas"></i> Looking up…</span>
+					<div class=not-found></div>
+					<p class=dict-placeholder>Search a word above to see its definition and synonyms.</p>
+					<div class=dict-result style=display:none>
+						<p class=dict-word></p>
+						<p class=dict-label>Definition</p>
+						<p class=def></p>
+						<div class=dict-syns>
+							<p class=dict-label>Synonyms</p>
+							<p class=syns></p>
 						</div>
 					</div>
 				</section>
 			</div>
 		  </div>
 
-		<!-- Add Task drawer — sits outside .task so it overlays the full page -->
-		<div class="modal task-modal drawer-overlay">
-			<div class="drawer">
-				<div class="drawer-header">
+		
+		<div class="drawer-overlay modal task-modal">
+			<div class=drawer>
+				<div class=drawer-header>
 					<h2>New Task</h2>
-					<button class="drawer-close closeBtn" aria-label="Close"><i class="fas fa-times"></i></button>
+					<button class="closeBtn drawer-close" aria-label=Close><i class="fa-times fas"></i></button>
 				</div>
-				<form id="taskform" class="drawer-form">
-					<label for="taskInput">Task name</label>
-					<input type="text" name="task" id="taskInput" placeholder="What needs doing?" required="">
+				<form id=taskform class=drawer-form>
+					<label for=taskInput>Task name</label>
+					<input name=task id=taskInput placeholder="What needs doing?" required>
 
-					<label for="dueDateInput">Due date</label>
-					<input type="date" name="dueDate" id="dueDateInput">
+					<label for=dueDateInput>Due date</label>
+					<input type=date name=dueDate id=dueDateInput>
 
-					<label for="completionTimeInput">Due time</label>
-					<input type="time" name="completionTime" id="completionTimeInput">
+					<label for=completionTimeInput>Due time</label>
+					<input type=time name=completionTime id=completionTimeInput>
 
-					<label for="estimatedTimeInput">Estimated time (mins)</label>
-					<input type="number" name="estimatedTime" id="estimatedTimeInput" placeholder="e.g. 30">
+					<label for=estimatedTimeInput>Estimated time (mins)</label>
+					<input type=number name=estimatedTime id=estimatedTimeInput placeholder="e.g. 30">
 
-					<label for="priorityInput">Priority</label>
-					<select name="prority" id="priorityInput">
-						<option value="">Select priority</option>
-						<option value="Low">Low</option>
-						<option value="Medium">Medium</option>
-						<option value="High">High</option>
+					<label for=priorityInput>Priority</label>
+					<select name=prority id=priorityInput>
+						<option value>Select priority</option>
+						<option value=Low>Low</option>
+						<option value=Medium>Medium</option>
+						<option value=High>High</option>
 					</select>
 
-					<button class="drawer-submit" type="submit">Add Task</button>
+					<button class=drawer-submit>Add Task</button>
 				</form>
 			</div>
 		</div>
 
-		<div class="task">
-			<div class="task-header">
-				<div class="header-item">
+		<div class=task>
+			<div class=task-header>
+				<div class=header-item>
 					<h2>Today's Task List</h2>
 				</div>
-				<div class="header-item">
-					<button class="openBtn task-add-btn"><i class="fas fa-plus"></i><span class="taskBtnText">Add Task</span></button>
+				<div class=header-item>
+					<button class="openBtn task-add-btn"><i class="fa-plus fas"></i><span class=taskBtnText>Add Task</span></button>
 				</div>
 			</div>
-			<div class="quadrants">
-				<div class="space"></div>
-				<div class="urgent">
+			<div class=quadrants>
+				<div class=space></div>
+				<div class=urgent>
 					<h2>Urgent</h2>
 				</div>
-				<div class="not-urgent">
+				<div class=not-urgent>
 					<h2>Not Urgent</h2>
 				</div>
-				<div class="important">
+				<div class=important>
 					<h2>Important</h2>
 				</div>
-				<div class="not-important">
+				<div class=not-important>
 					<h2>Not Important</h2>
 				</div>
-				<div class="cards">
-					<span class="responsive-card-text">Do Now</span>
-					<div class="task-cards do-it-card fa-sm">
-						<h2><i class="far fa-check-circle"></i><span class="cards-header-text">Do Now</span></h2>
-						<p class="card-subtitle">Urgent &amp; important</p>
-						<div id="do-it">
-							<p class="emptyList">Nothing here yet</p>
-							<ul class="box"></ul>
+				<div class=cards>
+					<span class=responsive-card-text>Do Now</span>
+					<div class="do-it-card fa-sm task-cards">
+						<h2><i class="fa-check-circle far"></i><span class=cards-header-text>Do Now</span></h2>
+						<p class=card-subtitle>Urgent &amp; important</p>
+						<div id=do-it>
+							<p class=emptyList>Nothing here yet</p>
+							<ul class=box></ul>
 						</div>
 					</div>
-					<span class="responsive-card-text">Schedule</span>
-					<div class="task-cards schedule-card">
-						<h2><i class="far fa-clock fa-sm"></i><span class="cards-header-text">Schedule</span></h2>
-						<p class="card-subtitle">Important, not urgent</p>
-						<div id="schedule">
-							<p class="emptyList">Nothing here yet</p>
-							<ul class="box"></ul>
+					<span class=responsive-card-text>Schedule</span>
+					<div class="schedule-card task-cards">
+						<h2><i class="fa-clock fa-sm far"></i><span class=cards-header-text>Schedule</span></h2>
+						<p class=card-subtitle>Important, not urgent</p>
+						<div id=schedule>
+							<p class=emptyList>Nothing here yet</p>
+							<ul class=box></ul>
 						</div>
 					</div>
-					<span class="responsive-card-text">Delegate</span>
-					<div class="task-cards relegate-card">
-						<h2><i class="fas fa-user-plus fa-sm"></i><span class="cards-header-text">Delegate</span></h2>
-						<p class="card-subtitle">Urgent, not important</p>
-						<div id="relegate">
-							<p class="emptyList">Nothing here yet</p>
-							<ul class="box"></ul>
+					<span class=responsive-card-text>Delegate</span>
+					<div class="relegate-card task-cards">
+						<h2><i class="fa-sm fa-user-plus fas"></i><span class=cards-header-text>Delegate</span></h2>
+						<p class=card-subtitle>Urgent, not important</p>
+						<div id=relegate>
+							<p class=emptyList>Nothing here yet</p>
+							<ul class=box></ul>
 						</div>
 					</div>
-					<span class="responsive-card-text">Eliminate</span>
-					<div class="task-cards dont-do-card fa-sm">
-						<h2><i class="fas fa-trash-alt"></i><span class="cards-header-text">Eliminate</span></h2>
-						<p class="card-subtitle">Neither urgent nor important</p>
-						<div id="dont-do">
-							<p class="emptyList">Nothing here yet</p>
-							<ul class="box"></ul>
+					<span class=responsive-card-text>Eliminate</span>
+					<div class="dont-do-card fa-sm task-cards">
+						<h2><i class="fa-trash-alt fas"></i><span class=cards-header-text>Eliminate</span></h2>
+						<p class=card-subtitle>Neither urgent nor important</p>
+						<div id=dont-do>
+							<p class=emptyList>Nothing here yet</p>
+							<ul class=box></ul>
 						</div>
 					</div>
 				</div>
@@ -246,7 +235,6 @@
 		</div>
 	</div>
 	
-	<script type="module" src="/public.d75c09d5.js"></script>
+	<script type=module src=/public.24d4ed59.js></script>
 
 
-</body></html>
