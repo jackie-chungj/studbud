@@ -29,33 +29,29 @@ export function playTone(freq, duration, type, gain) {
 // Named events used by Pomodoro
 export function playSound(event) {
     if (event === 'session') {
-        playTone(523, 0.18, 'sine', 0.16);
-        setTimeout(() => playTone(659, 0.25, 'sine', 0.14), 160);
+        playTone(523, 0.18, 'sine', 0.28);
+        setTimeout(() => playTone(659, 0.25, 'sine', 0.24), 160);
     } else if (event === 'break') {
-        playTone(392, 0.22, 'sine', 0.14);
-        setTimeout(() => playTone(330, 0.3, 'sine', 0.12), 180);
+        playTone(392, 0.22, 'sine', 0.24);
+        setTimeout(() => playTone(330, 0.3, 'sine', 0.20), 180);
     } else if (event === 'end') {
-        playTone(440, 0.15, 'sine', 0.15);
-        setTimeout(() => playTone(440, 0.15, 'sine', 0.13), 200);
-        setTimeout(() => playTone(440, 0.22, 'sine', 0.11), 400);
+        playTone(440, 0.15, 'sine', 0.26);
+        setTimeout(() => playTone(440, 0.15, 'sine', 0.22), 200);
+        setTimeout(() => playTone(440, 0.22, 'sine', 0.18), 400);
     }
 }
 
-// Stopwatch-specific sounds — subtle single tones
+// Stopwatch-specific sounds — lighter than Pomodoro
 export function playSwSound(event) {
     if (event === 'start') {
-        // Single soft tick upward
-        playTone(600, 0.12, 'sine', 0.12);
+        playTone(600, 0.12, 'sine', 0.18);
     } else if (event === 'stop') {
-        // Slightly lower, gentle
-        playTone(480, 0.12, 'sine', 0.11);
+        playTone(480, 0.12, 'sine', 0.16);
     } else if (event === 'lap') {
-        // Quick light double-tick
-        playTone(700, 0.08, 'sine', 0.1);
-        setTimeout(() => playTone(700, 0.1, 'sine', 0.08), 100);
+        playTone(700, 0.08, 'sine', 0.15);
+        setTimeout(() => playTone(700, 0.1, 'sine', 0.12), 100);
     } else if (event === 'clear') {
-        // Very soft low sweep — optional, quiet
-        playTone(320, 0.18, 'sine', 0.08);
+        playTone(320, 0.18, 'sine', 0.12);
     }
 }
 
