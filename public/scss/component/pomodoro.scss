@@ -19,7 +19,7 @@
         .line {
             height: 4px;
             background: red;
-            width: 180px;
+            width: 220px;
             margin: 0 auto 12px;
             border-radius: 2px;
             transition: width 1.05s linear, background 0.5s ease;
@@ -130,6 +130,7 @@
     .pomodoro-container {
         flex-direction: column;
         align-items: center;
+        gap: 16px;
     }
     .time-container {
         flex: 0 0 auto;
@@ -156,10 +157,13 @@
 
 // ── Mobile (grid stacked to single column at 900px)
 @media only screen and (max-width: 900px) {
+    .pomodoro-container {
+        gap: 14px;
+        padding-bottom: 4px;
+    }
     .pomodoro-container .time {
         margin: 0 0 4px;
         .line {
-            width: 140px;
             margin-bottom: 8px;
         }
     }
@@ -170,6 +174,9 @@
         font-size: 16px;
         margin-top: 2px;
         margin-bottom: 8px;
+    }
+    .pomodoro-container .pomo-controller {
+        gap: 8px;
     }
     .pomo-setting-container {
         gap: 14px;
@@ -186,8 +193,31 @@
             width: 28px;
             font-size: 18px;
         }
+        // Skip / Sound: intentional row — not faded leftovers
         .pomo-setting-footer {
-            padding-top: 0;
+            padding-top: 8px;
+            gap: 10px;
+            border-top: 1px solid rgba(20, 35, 72, 0.08);
+            justify-content: center;
+            align-items: center;
+        }
+        .pomo-secondary-btn {
+            font-size: 12px;
+            font-weight: 700;
+            padding: 7px 18px;
+            color: rgba(20, 35, 72, 0.7);
+            background: rgba(20, 35, 72, 0.08);
+            border-radius: 20px;
+            // Disabled: clearly inactive but not invisible/broken
+            &:disabled {
+                opacity: 0.5;
+                cursor: default;
+            }
+            // Active sound-on state: full dark for clear "on" signal
+            &.pomo-sound-active {
+                color: #142348;
+                background: rgba(20, 35, 72, 0.11);
+            }
         }
     }
 }
@@ -199,8 +229,32 @@
     .pomodoro-container .time h3 {
         font-size: 14px;
     }
+    // At very narrow widths: stack session + break vertically for cleaner layout
     .pomo-setting-container {
+        flex-direction: column;
+        align-items: center;
         gap: 10px;
+        .pomo-setting-flex {
+            width: 100%;
+            text-align: center;
+        }
+        .session, .break {
+            justify-content: center;
+        }
+        .pomo-setting-footer {
+            width: 100%;
+            flex-direction: row;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 2px;
+        }
+        // Larger tap targets at narrowest width
+        .pomo-secondary-btn {
+            font-size: 13px;
+            padding: 8px 22px;
+            color: rgba(20, 35, 72, 0.75);
+            background: rgba(20, 35, 72, 0.09);
+        }
     }
 }
   

@@ -1,68 +1,81 @@
-import Navigation from './component/navigation';
-import './component/tasklist';
-import './component/dictionary';
-import './component/pomodoro';
-import './component/stopwatch';
-import './component/music';
+import Navigation from "./component/navigation.js";
+import "./component/tasklist.js";
+import "./component/dictionary.js";
+import "./component/pomodoro.js";
+import "./component/stopwatch.js";
+import "./component/music.js";
 
-// Reference from from Rob Dongas class tutorial walkthrough
-const links = document.querySelectorAll('.timer-nav > ul > li > a');
-const pages = document.querySelectorAll('.timer-page-container');
+document.addEventListener("DOMContentLoaded", function () {
+  // Timer tab navigation
+  const links = document.querySelectorAll(".timer-nav > ul > li > a");
+  const pages = document.querySelectorAll(".timer-page-container");
 
-var timerNav = new Navigation(links, pages);
-timerNav.getLinks();
+  if (links.length && pages.length) {
+    const timerNav = new Navigation(links, pages);
 
-timerNav.links.forEach(function(link) {
-    link.addEventListener('click', function() {
-        let pageId = timerNav.getHash(link);
+    // Set default page
+    timerNav.init("pomodoro");
+
+    timerNav.links.forEach(function (link) {
+      link.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        const pageId = timerNav.getHash(link);
+        if (!pageId || pageId === timerNav.currentPage) return;
+
         timerNav.setPage(pageId);
-    })
-})
-
-
-
-// Multiple modals reference from = https://stackoverflow.com/questions/40645032/creating-multiple-modals-on-a-single-page
-    // Get the modal
-    var modal = document.getElementsByClassName('modal');
-
-    // Get the button that opens the modal
-    var btn = document.getElementsByClassName('openBtn');
-
-    // Get the <span> element that closes the modal
-    var span = document.getElementsByClassName('closeBtn');
-
-    // When the user clicks the button, open the modal 
-    btn[0].onclick = function() {
-        modal[0].style.display = "block";
-    }
-
-    btn[1].onclick = function() {
-        modal[1].style.display = "block";
-    }
-    // When the user clicks on <span> (x), close the modal
-    span[0].onclick = function() {
-        modal[0].style.display = "none";
-    }
-
-    span[1].onclick = function() {
-        modal[1].style.display = "none";
-    }
-    // Close intro modal on backdrop click
-    // Close drawer when clicking the overlay area (outside the drawer panel)
-    window.onclick = function(event) {
-        if (event.target == modal[0]) {
-            modal[0].style.display = "none";
-        }
-        if (event.target == modal[1]) {
-            modal[1].style.display = "none";
-        }
-    }
-
-    // Escape key closes whichever modal/drawer is open
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            modal[0].style.display = 'none';
-            modal[1].style.display = 'none';
-        }
+      });
     });
+  }
 
+  // Multiple modals
+  const modals = document.getElementsByClassName("modal");
+  const openButtons = document.getElementsByClassName("openBtn");
+  const closeButtons = document.getElementsByClassName("closeBtn");
+
+  function openModal(index) {
+    if (modals[index]) {
+      modals[index].style.display = "block";
+    }
+  }
+
+  function closeModal(index) {
+    if (modals[index]) {
+      modals[index].style.display = "none";
+    }
+  }
+
+  function closeAllModals() {
+    Array.from(modals).forEach((modal) => {
+      modal.style.display = "none";
+    });
+  }
+
+  Array.from(openButtons).forEach((button, index) => {
+    button.addEventListener("click", function () {
+      openModal(index);
+    });
+  });
+
+  Array.from(closeButtons).forEach((button, index) => {
+    button.addEventListener("click", function () {
+      closeModal(index);
+    });
+  });
+
+  // Close modal on backdrop click
+  window.addEventListener("click", function (event) {
+    Array.from(modals).forEach((modal) => {
+      if (event.target === modal) {
+        modal.style.display = "none";
+      }
+    });
+  });
+
+  // Escape key closes all open modals
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") {
+      closeAllModals();
+    }
+  });
+});

@@ -59,3 +59,13 @@ export function playSwSound(event) {
 export function setSoundEnabled(val) {
     soundEnabled = val;
 }
+
+// Mobile browsers suspend AudioContext until a real user gesture.
+// Call this inside any tap/click handler to ensure the context is running
+// before timed sounds (e.g. timer-end) need to fire later.
+export function unlockAudio() {
+    const ctx = getAudioCtx();
+    if (ctx.state === 'suspended') {
+        ctx.resume();
+    }
+}

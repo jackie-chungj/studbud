@@ -1,71 +1,134 @@
-// Reference from from Rob Dongas class tutorial walkthrough
-//Define Variables
-const form = document.getElementById("taskform");
-const button = document.querySelector("#taskform > button")
-var taskInput = document.getElementById("taskInput");
+// Reference from Rob Dongas class tutorial walkthrough
 
-var doIt = document.getElementById("do-it");
+// ── DOM references ──────────────────────────────────────────
+const form               = document.getElementById("taskform");
+var taskInput            = document.getElementById("taskInput");
+var dueDateInput         = document.getElementById("dueDateInput");
+var completionTimeInput  = document.getElementById("completionTimeInput");
+var estimatedTimeInput   = document.getElementById("estimatedTimeInput");
+var priorityInput        = document.getElementById("priorityInput");
+
+var doIt     = document.getElementById("do-it");
 var schedule = document.getElementById("schedule");
 var relegate = document.getElementById("relegate");
-var dontDo = document.getElementById("dont-do");
+var dontDo   = document.getElementById("dont-do");
 
+// Drawer elements — needed to switch between Add / Edit modes
+const drawerOverlay  = document.querySelector('.task-modal');
+const drawerTitle    = document.querySelector('.drawer-header h2');
+const submitBtn      = document.querySelector('.drawer-submit');
+const drawerCloseBtn = document.querySelector('.drawer-close');
+
+// ── State ───────────────────────────────────────────────────
 let tasklist;
-
-// ── Drag-and-drop state ────────────────────────────────────
-let draggedItem = null;
-
-var dueDateInput = document.getElementById("dueDateInput");
-var completionTimeInput = document.getElementById("completionTimeInput");
-var estimatedTimeInput = document.getElementById("estimatedTimeInput");
-var priorityInput = document.getElementById("priorityInput");
-
-form.addEventListener("submit", function(event){
-    event.preventDefault();
-    let task = taskInput.value;
-    let dueDate = dueDateInput.value;
-    let completionTime = completionTimeInput.value;
-    let estimatedTime = estimatedTimeInput.value;
-    let priorityRating = priorityInput.options[priorityInput.selectedIndex].value;
-    if (task) {
-        addTask(task, dueDate, estimatedTime, priorityRating, completionTime, false); 
-    }
-})
-
+let draggedItem  = null;
+let editingId    = null;   // null = adding new task, number = editing existing task
 var taskListArray = [];
 
+// ── localStorage ────────────────────────────────────────────
+const LS_KEY = 'studbud-tasks';
+
+// Walk all four quadrant boxes and snapshot every task + its current quadrant
+// and completion state. Called after every state-changing action.
+function saveTasks() {
+    const quadrantMap = {
+        'do-it':    doIt,
+        'schedule': schedule,
+        'relegate': relegate,
+        'dont-do':  dontDo
+    };
+    const data = [];
+    for (const [quadrantId, quadrantEl] of Object.entries(quadrantMap)) {
+        quadrantEl.children[1].querySelectorAll('.itemDiv').forEach(item => {
+            const id   = Number(item.getAttribute('data-id'));
+            const task = taskListArray.find(t => t.id === id);
+            if (task) {
+                data.push({
+                    ...task,
+                    quadrant:         quadrantId,
+                    completionStatus: item.classList.contains('completed')
+                });
+            }
+        });
+    }
+    localStorage.setItem(LS_KEY, JSON.stringify(data));
+}
+
+// Restore tasks from localStorage on page load.
+// Uses the saved quadrant directly — does NOT re-run urgency/priority logic —
+// so drag-and-drop decisions from the previous session are preserved.
+function loadTasks() {
+    let raw;
+    try { raw = localStorage.getItem(LS_KEY); } catch { return; }
+    if (!raw) return;
+    let data;
+    try { data = JSON.parse(raw); } catch { return; }
+
+    // Guard against double-initialization: clear any existing state before
+    // repopulating so a second call never duplicates tasks in the array or DOM.
+    taskListArray.length = 0;
+    [doIt, schedule, relegate, dontDo].forEach(q => {
+        q.children[1].querySelectorAll('.itemDiv').forEach(el => el.remove());
+    });
+
+    const quadrantMap = {
+        'do-it':    doIt,
+        'schedule': schedule,
+        'relegate': relegate,
+        'dont-do':  dontDo
+    };
+
+    data.forEach(task => {
+        taskListArray.push(task);
+        const quadrantEl = quadrantMap[task.quadrant] || doIt;
+        const item = createTaskElement(task);
+        if (task.completionStatus) item.classList.add('completed');
+        quadrantEl.children[1].appendChild(item);
+    });
+
+    sortAllQuadrants();
+    updateEmpty();
+}
+
+// ── Form submission ─────────────────────────────────────────
+form.addEventListener("submit", function(event) {
+    event.preventDefault();
+    if (editingId !== null) {
+        saveEdit();
+        return;
+    }
+    const task           = taskInput.value;
+    const dueDate        = dueDateInput.value;
+    const completionTime = completionTimeInput.value;
+    const estimatedTime  = estimatedTimeInput.value;
+    const priorityRating = priorityInput.options[priorityInput.selectedIndex].value;
+    if (task) {
+        addTask(task, dueDate, estimatedTime, priorityRating, completionTime, false);
+    }
+});
+
+// ── Add task ────────────────────────────────────────────────
 function addTask(taskDescription, dueDate, estimatedTime, priorityRating, completionTime, completionStatus) {
-    let d = new Date();
-    let dateCreated = d.getFullYear();
-    let task = {  
-      // this id is going to be a way we can link our tasks inside the array to the task that is going to display on the screen
-      // use the Date() field tiem. use the data.now function to return that date as a time stamp  
-      id: Date.now(),
-      taskDescription,
-      dueDate,
-      dateCreated,
-      estimatedTime,
-      completionTime,
-      priorityRating,
-      estimatedTime,
-      completionStatus
+    const task = {
+        id:            Date.now(),
+        taskDescription,
+        dueDate,
+        dateCreated: new Date().toISOString(),
+        estimatedTime,
+        completionTime,
+        priorityRating,
+        completionStatus
     };
     taskListArray.push(task);
-    console.log(taskListArray);
     renderTask(task);
-  }
+}
 
-function renderTask(task){
-
-    updateEmpty();
-
-    var box = document.querySelector('.box')
-
-
-    // Create LI
-    let item = document.createElement('li');
-    item.classList.add("itemDiv")
-    // set this up as a html attribute, so we can create arbitrary html attributes for different data we install.
-    // we do this by using the set attribute function, for the name attribute we usually use the data pre fix followed by whatever type of data we're storing
+// ── Create task DOM element ─────────────────────────────────
+// Pure factory — no quadrant logic. Used by renderTask (new tasks)
+// and loadTasks (persisted tasks).
+function createTaskElement(task) {
+    const item = document.createElement('li');
+    item.classList.add("itemDiv");
     item.setAttribute('data-id', task.id);
     item.setAttribute('draggable', 'true');
     item.innerHTML =
@@ -82,163 +145,212 @@ function renderTask(task){
         draggedItem = null;
     });
 
-    box.appendChild(item);
+    // Edit button
+    const editButton = document.createElement("button");
+    editButton.innerHTML = '<i class="fas fa-pencil-alt"></i>';
+    editButton.classList.add("edit-btn");
+    editButton.setAttribute('title', 'Edit task');
+    editButton.addEventListener("click", function(e) {
+        e.preventDefault();
+        const id = Number(e.currentTarget.closest('li').getAttribute('data-id'));
+        const t  = taskListArray.find(t => t.id === id);
+        if (t) openDrawerForEdit(t);
+    });
 
-    // Complete Button
-    let completedButton = document.createElement("button");
+    // Complete button
+    const completedButton = document.createElement("button");
     completedButton.innerHTML = '<i class="fas fa-check"></i>';
     completedButton.classList.add("complete-btn");
     completedButton.setAttribute('title', 'Mark complete');
-    item.appendChild(completedButton);
+    completedButton.addEventListener("click", function(e) {
+        e.currentTarget.closest('li').classList.toggle("completed");
+        saveTasks();
+    });
 
-    // Delete Button
-    let delButton = document.createElement("button");
+    // Delete button
+    const delButton = document.createElement("button");
     delButton.innerHTML = '<i class="fas fa-times"></i>';
     delButton.classList.add('delete-btn');
     delButton.setAttribute('title', 'Remove task');
+    delButton.addEventListener("click", function(e) {
+        e.preventDefault();
+        const li    = e.currentTarget.closest('li');
+        const id    = Number(li.getAttribute('data-id'));
+        const index = taskListArray.findIndex(t => t.id === id);
+        removeItemFromArray(taskListArray, index);
+        li.remove();
+        updateEmpty();
+        saveTasks();
+    });
+
+    item.appendChild(editButton);
+    item.appendChild(completedButton);
     item.appendChild(delButton);
+    return item;
+}
 
-
-    // Event Listeners for DOM elements
-    delButton.addEventListener("click", function(event){
-      event.preventDefault();
-      let li = event.currentTarget.closest('li');
-      let id = li.getAttribute('data-id');
-      let index = taskListArray.findIndex(task => task.id === Number(id));
-      removeItemFromArray(taskListArray, index);
-      updateEmpty();
-      li.remove();
-    })
-    // Event Listeners for complete button
-    completedButton.addEventListener("click", function(event){
-      let li = event.currentTarget.closest('li');
-      li.classList.toggle("completed");
-    })  
-
-// help and assist from Rob Dongas
-    // Extract the due date and priority from the task
-    // Compare the due date to current date
-    // Conditionally assign the urgency based on date comparison
-    // --> If (dueDate - currentDate) < X THEN URGENT
-    // --> If (dueDate - currentDate) > X THEN NOT URGENT
-    // assign the importance based on the priority rating
-
-    let currentDate = new Date();
-    let taskDueDate = new Date(task.dueDate);
-    let taskPriority = task.priorityRating;
-
-    let dateDiff = days_between(currentDate,taskDueDate);
-    let urgencyValue = 5;
-    
+// ── Render new task (computes quadrant from urgency + priority)
+function renderTask(task) {
+    const currentDate  = new Date();
+    const taskDueDate  = new Date(task.dueDate);
+    const dateDiff     = days_between(currentDate, taskDueDate);
+    const urgencyValue = 5;
 
     if (dateDiff > urgencyValue) {
-      console.log("Not urgent");
-      if (taskPriority == "" || taskPriority == "Low") {
-        console.log("Don't do");
-        tasklist = dontDo;
-      } else {
-        console.log("Schedule");
-        tasklist = schedule;
-      }
+        tasklist = (task.priorityRating === "" || task.priorityRating === "Low") ? dontDo : schedule;
     } else {
-      console.log("Urgent");
-      if (taskPriority == "" || taskPriority == "Low") {
-        console.log("Relegate");
-        tasklist = relegate;
-      } else {
-        console.log("Do it");
-        tasklist = doIt;
-      }
+        tasklist = (task.priorityRating === "" || task.priorityRating === "Low") ? relegate : doIt;
     }
 
-    // Append 
-    // which is finding the second item in the tasklist, which is the ul
-    tasklist.children[1].appendChild(item);
-
-    // Clear the input form
-    form.reset();  
+    const box = tasklist.children[1];
+    box.appendChild(createTaskElement(task));
+    sortQuadrantBox(box);
+    form.reset();
     updateEmpty();
-  }
-
-//  function to remove that frmom the array 
-  function removeItemFromArray(arr, index) {
-      if (index > -1){
-          arr.splice(index, 1)
-      }
-      return arr;
-  }
-
-// Make sure this makes sense for the user, and it doesnt tell them they havent added tasks, when they clearly have 
-// Help from Rob Dongas
-  // which checks to see if the ul has any children. the childNodes property is an array, so you can actually check it's length 
-  // then inside the if statement, you try to find the empty list just for that specific quadrant
-function updateEmpty() {
-  if (doIt.children[1].childNodes.length > 0) {
-    doIt.querySelector('.emptyList').style.display = 'none';
-  } else {
-    doIt.querySelector('.emptyList').style.display = 'block';
-  }
-
-  if (schedule.children[1].childNodes.length > 0) {
-    schedule.querySelector('.emptyList').style.display = 'none';
-  } else {
-    schedule.querySelector('.emptyList').style.display = 'block';
-  }
-
-  if (relegate.children[1].childNodes.length > 0) {
-    relegate.querySelector('.emptyList').style.display = 'none';
-  } else {
-    relegate.querySelector('.emptyList').style.display = 'block';
-  }
-
-  if (dontDo.children[1].childNodes.length > 0) {
-    dontDo.querySelector('.emptyList').style.display = 'none';
-  } else {
-    dontDo.querySelector('.emptyList').style.display = 'block';
-  }
-  
+    saveTasks();
 }
 
+// ── Edit flow ───────────────────────────────────────────────
+// Opens the drawer pre-filled with the task's current values.
+// The form submit handler routes to saveEdit() while editingId is set.
+function openDrawerForEdit(task) {
+    editingId                 = task.id;
+    taskInput.value           = task.taskDescription;
+    dueDateInput.value        = task.dueDate        || '';
+    completionTimeInput.value = task.completionTime || '';
+    estimatedTimeInput.value  = task.estimatedTime  || '';
+    priorityInput.value       = task.priorityRating || '';
+    drawerTitle.textContent   = 'Edit Task';
+    submitBtn.textContent     = 'Save Changes';
+    drawerOverlay.style.display = 'block';
+}
+
+// Updates the task data and its existing DOM element in place.
+// Does NOT re-run quadrant logic — the task stays in whichever
+// quadrant the user placed it via drag-and-drop.
+function saveEdit() {
+    const task = taskListArray.find(t => t.id === editingId);
+    if (!task) { resetEditState(); return; }
+
+    task.taskDescription = taskInput.value;
+    task.dueDate         = dueDateInput.value;
+    task.completionTime  = completionTimeInput.value;
+    task.estimatedTime   = estimatedTimeInput.value;
+    task.priorityRating  = priorityInput.options[priorityInput.selectedIndex].value;
+
+    const item = document.querySelector(`[data-id="${editingId}"]`);
+    if (item) {
+        item.querySelector('.task-text').textContent = task.taskDescription;
+
+        // Add, update, or remove the date span depending on new value
+        let dateSpan = item.querySelector('.task-date');
+        if (task.dueDate) {
+            if (dateSpan) {
+                dateSpan.textContent = task.dueDate;
+            } else {
+                dateSpan = document.createElement('span');
+                dateSpan.className = 'task-date';
+                dateSpan.textContent = task.dueDate;
+                item.querySelector('.task-text').insertAdjacentElement('afterend', dateSpan);
+            }
+        } else if (dateSpan) {
+            dateSpan.remove();
+        }
+
+        // Re-sort within its current quadrant so the updated due date is respected
+        sortQuadrantBox(item.parentElement);
+    }
+
+    saveTasks();
+    resetEditState();
+}
+
+// Resets drawer to Add-mode. Called after save, and also if the drawer
+// is closed mid-edit (X button, backdrop click, Escape).
+function resetEditState() {
+    editingId                   = null;
+    drawerTitle.textContent     = 'New Task';
+    submitBtn.textContent       = 'Add Task';
+    drawerOverlay.style.display = 'none';
+    form.reset();
+}
+
+// Guard: reset edit state whenever drawer is dismissed without saving
+drawerCloseBtn.addEventListener('click', function() {
+    if (editingId !== null) resetEditState();
+});
+drawerOverlay.addEventListener('click', function(e) {
+    if (e.target === drawerOverlay && editingId !== null) resetEditState();
+});
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && editingId !== null) resetEditState();
+});
+
+// ── Sorting ─────────────────────────────────────────────────
+// Sorts the li items in a ul.box by due date (earliest first).
+// Items with no due date sort to the bottom (Infinity).
+// Operates only on the box element — does not touch .emptyList.
+function sortQuadrantBox(box) {
+    const items = Array.from(box.querySelectorAll('.itemDiv'));
+    items.sort((a, b) => {
+        const idA = Number(a.getAttribute('data-id'));
+        const idB = Number(b.getAttribute('data-id'));
+        const tA  = taskListArray.find(t => t.id === idA);
+        const tB  = taskListArray.find(t => t.id === idB);
+        const dA  = tA && tA.dueDate ? new Date(tA.dueDate).getTime() : Infinity;
+        const dB  = tB && tB.dueDate ? new Date(tB.dueDate).getTime() : Infinity;
+        return dA - dB;
+    });
+    items.forEach(item => box.appendChild(item));
+}
+
+function sortAllQuadrants() {
+    [doIt, schedule, relegate, dontDo].forEach(q => sortQuadrantBox(q.children[1]));
+}
+
+// ── Helpers ─────────────────────────────────────────────────
+function removeItemFromArray(arr, index) {
+    if (index > -1) arr.splice(index, 1);
+    return arr;
+}
+
+function updateEmpty() {
+    [doIt, schedule, relegate, dontDo].forEach(q => {
+        q.querySelector('.emptyList').style.display =
+            q.children[1].childNodes.length > 0 ? 'none' : 'block';
+    });
+}
 
 function days_between(date1, date2) {
-
-  // The number of milliseconds in one day
-  const ONE_DAY = 1000 * 60 * 60 * 24;
-
-  // Calculate the difference in milliseconds
-  const differenceMs = Math.abs(date1 - date2);
-
-  // Convert back to days and return
-  return Math.round(differenceMs / ONE_DAY);
-
+    const ONE_DAY = 1000 * 60 * 60 * 24;
+    return Math.round(Math.abs(date1 - date2) / ONE_DAY);
 }
-// Function adapted from https://stackoverflow.com/questions/2627473/how-to-calculate-the-number-of-days-between-two-dates
 
-// ── Drag-and-drop drop zones ───────────────────────────────
+// ── Drag-and-drop drop zones ─────────────────────────────────
 function initDropZones() {
     [doIt, schedule, relegate, dontDo].forEach(quadrant => {
-        const box = quadrant.children[1]; // ul.box
+        const box = quadrant.children[1];
 
         quadrant.addEventListener('dragover', e => {
             e.preventDefault();
             quadrant.classList.add('drag-over');
         });
-
         quadrant.addEventListener('dragleave', e => {
             if (!quadrant.contains(e.relatedTarget)) {
                 quadrant.classList.remove('drag-over');
             }
         });
-
         quadrant.addEventListener('drop', e => {
             e.preventDefault();
             quadrant.classList.remove('drag-over');
             if (draggedItem && draggedItem.parentElement !== box) {
                 box.appendChild(draggedItem);
                 updateEmpty();
+                saveTasks();   // persist the new quadrant assignment
             }
         });
     });
 }
 
 initDropZones();
+loadTasks();

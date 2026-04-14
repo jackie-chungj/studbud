@@ -1,5 +1,5 @@
 // Reference - learnt from = nehasoni05 (2021). Pomodoro-Clock. [online] Github. Available at: https://github.com/nehasoni05/Pomodoro-Clock
-import { playSound, setSoundEnabled } from './sound.js';
+import { playSound, setSoundEnabled, unlockAudio } from './sound.js';
 
 var startBtn        = document.getElementById("pomo-start-button");
 var resetBtn        = document.getElementById("pomo-reset-button");
@@ -22,6 +22,7 @@ var inBreak         = false;
 // ── Sound toggle (shared system lives in sound.js) ─────────
 var _soundOn = true;
 soundToggle.addEventListener("click", function() {
+    unlockAudio();   // Ensures AudioContext is running from a real tap
     _soundOn = !_soundOn;
     setSoundEnabled(_soundOn);
     soundToggle.textContent = _soundOn ? 'Sound on' : 'Sound off';
@@ -64,12 +65,13 @@ decreaseBreak.addEventListener("click", function() {
 
 // ── Start ──────────────────────────────────────────────────
 startBtn.addEventListener("click", function() {
+    unlockAudio();   // First real gesture — unlock AudioContext for all future sounds
     document.getElementById("SBTN").style.display = 'none';
     document.getElementById("CBTN").style.display = 'none';
     document.getElementById("PBTN").style.display = 'block';
     heading.innerHTML = "Focus in progress";
     sessionTotalSec = parseInt(document.getElementById("STIME").innerHTML) * 60;
-    pomoline.style.width = '180px';
+    pomoline.style.width = '220px';
     inBreak = false;
     skipBtn.disabled = false;
     increaseSession.disabled = true;
@@ -102,7 +104,7 @@ function startTimer() {
         breakTime();
         return;
     }
-    updateLine(parseInt(min) * 60 + parseInt(sec), sessionTotalSec, 180);
+    updateLine(parseInt(min) * 60 + parseInt(sec), sessionTotalSec, 220);
     timerName = setTimeout(startTimer, 1000);
 }
 
@@ -118,6 +120,7 @@ pauseBtn.addEventListener("click", function() {
 
 // ── Resume ─────────────────────────────────────────────────
 continueBtn.addEventListener("click", function() {
+    unlockAudio();   // Re-unlock in case context was suspended while paused
     clearTimeout(timerName);
     document.getElementById("SBTN").style.display = 'none';
     document.getElementById("CBTN").style.display = 'none';
@@ -129,6 +132,7 @@ continueBtn.addEventListener("click", function() {
 
 // ── Skip ───────────────────────────────────────────────────
 skipBtn.addEventListener("click", function() {
+    unlockAudio();   // Skip is a user gesture — keep context alive
     clearTimeout(timerName);
     if (inBreak) {
         playSound('end');
@@ -155,7 +159,7 @@ function resetPomodoro() {
 
     heading.innerHTML = "Start Working!";
     pomoline.style.background = "red";
-    pomoline.style.width = '180px';
+    pomoline.style.width = '220px';
     skipBtn.disabled = true;
     inBreak = false;
 
@@ -178,7 +182,7 @@ function breakTime() {
     heading.innerHTML = "Break time";
     pomoline.style.background = 'blue';
     breakTotalSec = parseInt(timeArray[0]) * 60;
-    pomoline.style.width = '180px';
+    pomoline.style.width = '220px';
     inBreak = true;
     skipBtn.disabled = false;
     playSound('break');
@@ -206,7 +210,7 @@ function startBreak() {
         resetPomodoro();
         return;
     }
-    updateLine(parseInt(min) * 60 + parseInt(sec), breakTotalSec, 180);
+    updateLine(parseInt(min) * 60 + parseInt(sec), breakTotalSec, 220);
     timerName = setTimeout(startBreak, 1000);
 }
 

@@ -1,36 +1,44 @@
-// Reference from from Rob Dongas class tutorial walkthrough
+// Reference from Rob Dongas class tutorial walkthrough
 class Navigation {
-    constructor(links, pages) {
-        this.links = links;
-        this.pages = pages;
-        this.currentPage = null;
+  constructor(links, pages) {
+    this.links = links;
+    this.pages = pages;
+    this.currentPage = null;
+  }
+
+  getHash(link) {
+    const href = link.getAttribute("href");
+    return href ? href.replace("#", "") : "";
+  }
+
+  setPage(pageId) {
+    if (!pageId) return;
+
+    const targetPage = document.getElementById(pageId);
+    if (!targetPage) return;
+
+    this.currentPage = pageId;
+
+    this.links.forEach((link) => {
+      const isActive = this.getHash(link) === pageId;
+      link.classList.toggle("active", isActive);
+    });
+
+    this.pages.forEach((page) => {
+      page.style.display = "none";
+    });
+
+    targetPage.style.display = "block";
+  }
+
+  init(defaultPageId = null) {
+    const firstPageId =
+      defaultPageId || (this.links.length ? this.getHash(this.links[0]) : null);
+
+    if (firstPageId) {
+      this.setPage(firstPageId);
     }
-
-    getLinks() {
-        console.log(this.links);
-    }
-
-    setPage(pageId) {
-        this.currentPage = pageId;
-        console.log(this.currentPage);
-
-        this.links.forEach((link) => {
-            link.classList.remove('active');
-            if (this.getHash(link) === pageId) {
-                link.classList.add('active');
-            }
-        })
-
-        this.pages.forEach((page) => {
-            page.style.display = 'none';
-        })
-
-        document.getElementById(pageId).style.display = "block";
-    }
-
-    getHash(link) {
-        return link.href.split("#")[1];
-    }
+  }
 }
 
 export default Navigation;

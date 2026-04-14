@@ -218,6 +218,7 @@
 
 // ── Action buttons ─────────────────────────────────────────
 // Small icon-only buttons — present but not dominant.
+.edit-btn,
 .complete-btn,
 .delete-btn {
     flex-shrink: 0;
@@ -235,6 +236,16 @@
     letter-spacing: 0;
 
     i { pointer-events: none; }
+}
+
+.edit-btn {
+    background: rgba(101, 173, 252, 0.12);
+    color: rgba(20, 70, 180, 0.55);
+
+    &:hover {
+        background: rgba(101, 173, 252, 0.24);
+        color: #1a4faa;
+    }
 }
 
 .complete-btn {
