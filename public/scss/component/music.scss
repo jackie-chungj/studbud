@@ -2,7 +2,7 @@
 // The card's own overflow:hidden + border-radius:30px is the only visual
 // boundary. No inner tray — the embed sits directly in the card padding,
 // so it reads as card content rather than a boxed foreign widget.
-// min-height: 280px on the wrap prevents the embed collapsing below a
+// min-height: 260px on the wrap prevents the embed collapsing below a
 // usable render size at smaller viewport heights.
 
 .music {
@@ -22,7 +22,7 @@
 
 .music-embed-wrap {
     flex: 1;
-    min-height: 280px;
+    min-height: 260px;
     overflow: hidden;
     position: relative;
 
