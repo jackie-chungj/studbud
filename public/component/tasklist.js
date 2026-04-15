@@ -104,6 +104,7 @@ form.addEventListener("submit", function(event) {
     const priorityRating = priorityInput.options[priorityInput.selectedIndex].value;
     if (task) {
         addTask(task, dueDate, estimatedTime, priorityRating, completionTime, false);
+        drawerOverlay.style.display = 'none';
     }
 });
 
@@ -145,6 +146,17 @@ function createTaskElement(task) {
         draggedItem = null;
     });
 
+    // Move button (mobile only — hidden on desktop via CSS)
+    const moveButton = document.createElement("button");
+    moveButton.innerHTML = '<i class="fas fa-arrows-alt"></i>';
+    moveButton.classList.add("move-btn");
+    moveButton.setAttribute('title', 'Move to quadrant');
+    moveButton.addEventListener("click", function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        showMovePopover(e.currentTarget, item);
+    });
+
     // Edit button
     const editButton = document.createElement("button");
     editButton.innerHTML = '<i class="fas fa-pencil-alt"></i>';
@@ -183,6 +195,7 @@ function createTaskElement(task) {
         saveTasks();
     });
 
+    item.appendChild(moveButton);
     item.appendChild(editButton);
     item.appendChild(completedButton);
     item.appendChild(delButton);
@@ -325,6 +338,76 @@ function days_between(date1, date2) {
     const ONE_DAY = 1000 * 60 * 60 * 24;
     return Math.round(Math.abs(date1 - date2) / ONE_DAY);
 }
+
+// ── Mobile tap-to-move ──────────────────────────────────────
+// Shows a compact popover so users can move a task to any quadrant
+// without drag-and-drop. Moves the DOM node and calls saveTasks()
+// via the same path as drag-drop, so persistence is identical.
+
+const MOVE_TARGETS = [
+    { label: 'Do Now',    getBox: () => doIt.children[1] },
+    { label: 'Schedule',  getBox: () => schedule.children[1] },
+    { label: 'Delegate',  getBox: () => relegate.children[1] },
+    { label: 'Eliminate', getBox: () => dontDo.children[1] },
+];
+
+let activeMovePopover = null;
+
+function closeMovePopover() {
+    if (activeMovePopover) {
+        activeMovePopover.remove();
+        activeMovePopover = null;
+    }
+}
+
+function showMovePopover(triggerBtn, item) {
+    closeMovePopover();
+    const currentBox = item.parentElement;
+
+    const popover = document.createElement('div');
+    popover.className = 'move-popover';
+
+    MOVE_TARGETS.forEach(({ label, getBox }) => {
+        const targetBox = getBox();
+        const btn = document.createElement('button');
+        btn.className = 'move-popover-option';
+        btn.textContent = label;
+        if (currentBox === targetBox) btn.classList.add('move-popover-option--current');
+
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (currentBox !== targetBox) {
+                targetBox.appendChild(item);
+                updateEmpty();
+                saveTasks();
+            }
+            closeMovePopover();
+        });
+        popover.appendChild(btn);
+    });
+
+    document.body.appendChild(popover);
+    activeMovePopover = popover;
+
+    // Position relative to trigger button — prefer below, fall back to above
+    const rect  = triggerBtn.getBoundingClientRect();
+    const popH  = popover.offsetHeight || 152;
+    const below = window.innerHeight - rect.bottom;
+    const left  = Math.max(8, Math.min(rect.right - popover.offsetWidth, window.innerWidth - 152));
+
+    popover.style.position = 'fixed';
+    popover.style.zIndex   = '500';
+    popover.style.left     = left + 'px';
+    popover.style.top = (below >= popH + 8)
+        ? (rect.bottom + 4) + 'px'
+        : Math.max(8, rect.top - popH - 4) + 'px';
+}
+
+document.addEventListener('click', (e) => {
+    if (activeMovePopover && !activeMovePopover.contains(e.target)) {
+        closeMovePopover();
+    }
+});
 
 // ── Drag-and-drop drop zones ─────────────────────────────────
 function initDropZones() {
