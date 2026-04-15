@@ -1,21 +1,32 @@
 .pomodoro-container {
     display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: center;
     width: 100%;
     height: 100%;
-    flex-direction: row;
-    align-items: stretch;
 
-    /* pomodoro timer digits */
+    // ── Left column: timer digits + primary buttons + skip/sound ──
     .time-container {
+        flex: 1 1 220px;
         display: flex;
         flex-direction: column;
-        justify-content: center;
         align-items: center;
-        flex: 1;
+        justify-content: center;
+        padding-right: 24px;
+
+        .pomo-setting-footer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            width: 100%;
+            margin-top: 16px;
+        }
     }
+
     .time {
         margin: 0 0 8px;
-        justify-content: center;
         .line {
             height: 4px;
             background: red;
@@ -32,19 +43,18 @@
         margin: 0;
         text-align: center;
     }
-    .time  h3{
-        margin: 0;
+    .time h3 {
+        margin: 0 0 12px;
         margin-top: 4px;
-        margin-bottom: 12px;
         font-size: 22px;
+        text-align: center;
     }
-     
-    /* pomodoro start pause reset buttons */
+
     .pomo-controller {
         display: flex;
         flex-direction: row;
-        justify-content: space-evenly; 
-        bottom: 0px;
+        justify-content: center;
+        gap: 8px;
         .sBtn, .rBtn {
             padding: 0 20px;
             font-size: 40px;
@@ -52,18 +62,20 @@
             text-align: center;
         }
     }
-    /* pomodoro edit sessions and breaks */
+
+    // ── Right column: session / break controls ─────────────────
     .pomo-setting-container {
+        flex: 1 1 200px;
         display: flex;
-        justify-content: center;
         flex-direction: column;
+        justify-content: center;
+        align-items: center;
         gap: 20px;
-        padding: 0 20px;
+        padding-left: 24px;
+
         .pomo-setting-flex {
-            justify-content: center;
-            p {
-                margin: 0 0 6px;
-            }
+            text-align: center;
+            p { margin: 0 0 6px; }
         }
         .session, .break {
             display: flex;
@@ -71,9 +83,8 @@
             font-size: 20px;
             font-weight: bold;
             color: #142348;
-            justify-content: space-evenly;
+            justify-content: center;
             text-align: center;
-            width: 100%;
         }
         .session p, .break p {
             margin: 0 16px;
@@ -89,97 +100,83 @@
             color: white;
             border-radius: 100%;
         }
-        .pomo-setting-footer {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding-top: 4px;
-        }
-        .pomo-secondary-btn {
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.04em;
-            color: rgba(20, 35, 72, 0.45);
-            background: rgba(20, 35, 72, 0.05);
-            border: none;
-            border-radius: 20px;
-            padding: 5px 14px;
-            cursor: pointer;
-            transition: background 0.15s, color 0.15s;
-            font-family: inherit;
-            &:hover:not(:disabled) {
-                background: rgba(20, 35, 72, 0.1);
-                color: #142348;
-            }
-            &:disabled {
-                opacity: 0.35;
-                cursor: default;
-            }
-            &.pomo-sound-active {
-                color: #142348;
-                background: rgba(20, 35, 72, 0.08);
-            }
-        }
-    }
-  }
-
-  
-// Responsive
-// ── Desktop narrow (bento grid still active, features column gets tight)
-@media only screen and (max-width: 1300px) {
-    .pomodoro-container {
-        flex-direction: column;
-        align-items: center;
-        gap: 16px;
-    }
-    .time-container {
-        flex: 0 0 auto;
-        width: 100%;
-    }
-    .pomo-setting-container {
-        flex-direction: row;
-        width: 100%;
-        padding: 0;
-        justify-content: center;
-        align-items: flex-start;
-        gap: 28px;
-        flex-wrap: wrap;
-        .pomo-setting-flex {
-            text-align: center;
-        }
-        .pomo-setting-footer {
-            width: 100%;
-            justify-content: center;
-            padding-top: 0;
-        }
     }
 }
 
-// ── Mobile (grid stacked to single column at 900px)
-@media only screen and (max-width: 900px) {
+.pomo-secondary-btn {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: rgba(20, 35, 72, 0.55);
+    background: rgba(20, 35, 72, 0.06);
+    border: none;
+    border-radius: 20px;
+    padding: 8px 20px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    font-family: inherit;
+    &:hover:not(:disabled) {
+        background: rgba(20, 35, 72, 0.1);
+        color: #142348;
+    }
+    &:disabled {
+        opacity: 0.35;
+        cursor: default;
+    }
+    &.pomo-sound-active {
+        color: #142348;
+        background: rgba(20, 35, 72, 0.08);
+    }
+}
+
+
+// Responsive
+// ── Narrow desktop / tablet (1200px) ──────────────────────
+// height: auto lets the two-column content determine card height
+// rather than filling the fixed grid row and leaving dead space.
+@media only screen and (max-width: 1200px) {
+    .timer-page-container#pomodoro {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
     .pomodoro-container {
-        gap: 14px;
-        padding-bottom: 4px;
+        height: auto;
+    }
+}
+
+// ── Mobile stacked (≤900px) ───────────────────────────────
+// flex-wrap naturally stacks the two columns once each column's
+// flex-basis (220px + 200px = 420px) exceeds the available card width.
+// This happens around the 900px bento-to-block switch point.
+// At that point: remove the vertical divider, add a horizontal one
+// between the stacked sections, and restore symmetrical padding.
+@media only screen and (max-width: 900px) {
+    .pomodoro-container .time-container {
+        border-right: none;
+        padding-right: 0;
+        padding-bottom: 16px;
+    }
+    .pomodoro-container .pomo-setting-container {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+        padding-left: 0;
+        padding-top: 20px;
     }
     .pomodoro-container .time {
         margin: 0 0 4px;
-        .line {
-            margin-bottom: 8px;
-        }
+        .line { margin-bottom: 8px; }
     }
-    .pomodoro-container .time p {
-        font-size: 52px;
-    }
+    .pomodoro-container .time p { font-size: 52px; }
     .pomodoro-container .time h3 {
         font-size: 16px;
         margin-top: 2px;
         margin-bottom: 8px;
     }
-    .pomodoro-container .pomo-controller {
-        gap: 8px;
-    }
+    .pomodoro-container .pomo-controller { gap: 6px; }
     .pomo-setting-container {
-        gap: 14px;
         .pomo-setting-flex p {
             margin-bottom: 4px;
             font-size: 12px;
@@ -193,43 +190,14 @@
             width: 28px;
             font-size: 18px;
         }
-        // Skip / Sound: intentional row — not faded leftovers
-        .pomo-setting-footer {
-            padding-top: 8px;
-            gap: 10px;
-            border-top: 1px solid rgba(20, 35, 72, 0.08);
-            justify-content: center;
-            align-items: center;
-        }
-        .pomo-secondary-btn {
-            font-size: 12px;
-            font-weight: 700;
-            padding: 7px 18px;
-            color: rgba(20, 35, 72, 0.7);
-            background: rgba(20, 35, 72, 0.08);
-            border-radius: 20px;
-            // Disabled: clearly inactive but not invisible/broken
-            &:disabled {
-                opacity: 0.5;
-                cursor: default;
-            }
-            // Active sound-on state: full dark for clear "on" signal
-            &.pomo-sound-active {
-                color: #142348;
-                background: rgba(20, 35, 72, 0.11);
-            }
-        }
     }
 }
 
+// ── Narrow mobile (≤570px) ────────────────────────────────
 @media only screen and (max-width: 570px) {
-    .pomodoro-container .time p {
-        font-size: 44px;
-    }
-    .pomodoro-container .time h3 {
-        font-size: 14px;
-    }
-    // At very narrow widths: stack session + break vertically for cleaner layout
+    .pomodoro-container .time p { font-size: 44px; }
+    .pomodoro-container .time h3 { font-size: 14px; }
+    // Stack session + break vertically at narrowest widths
     .pomo-setting-container {
         flex-direction: column;
         align-items: center;
@@ -238,23 +206,6 @@
             width: 100%;
             text-align: center;
         }
-        .session, .break {
-            justify-content: center;
-        }
-        .pomo-setting-footer {
-            width: 100%;
-            flex-direction: row;
-            justify-content: center;
-            gap: 12px;
-            margin-top: 2px;
-        }
-        // Larger tap targets at narrowest width
-        .pomo-secondary-btn {
-            font-size: 13px;
-            padding: 8px 22px;
-            color: rgba(20, 35, 72, 0.75);
-            background: rgba(20, 35, 72, 0.09);
-        }
+        .session, .break { justify-content: center; }
     }
 }
-  

@@ -42,18 +42,19 @@ body::before {
 }
 
 .grid-container {
-  padding: 28px;
+  box-sizing: border-box;
   display: grid;
-  grid-template-columns: 0.85fr 1.15fr;
-  grid-template-rows: 56px calc(100vh - 56px - 16px - 56px);
-  column-gap: 16px;
-  row-gap: 16px;
+  grid-template-columns: .85fr 1.15fr;
+  grid-template-rows: auto auto;
   grid-template-areas:
     "header header"
     "features task";
+  gap: 16px;
   width: 100%;
-  min-height: 100vh;
-  box-sizing: border-box;
+  max-width: 1440px;
+  margin: 0 auto;
+  min-height: 100dvh;
+  padding: 20px;
 }
 
 .features {
@@ -64,7 +65,7 @@ body::before {
   grid-template-rows: 1fr 1.1fr;
   gap: 16px;
   grid-template-areas:
-    "timer      timer"
+    "timer timer"
     "music  dictionary";
   grid-area: features;
 }
@@ -72,7 +73,7 @@ body::before {
   grid-area: timer;
   background-color: #ffff;
   border-radius: 30px;
-  padding: 22px 20px;
+  padding: 20px 20px;
   display: flex;
   flex-direction: column;
 }
@@ -80,10 +81,6 @@ body::before {
 .music, .dictionary {
   background-color: #ffff;
   border-radius: 30px;
-}
-
-.dictionary {
-  padding: 18px 20px;
 }
 
 button {
@@ -385,6 +382,25 @@ button {
 }
 
 
+// ── Tablet / narrow desktop ────────────────────────────────
+// Two problems at this range:
+//
+// 1. Column width: 0.85fr/1.15fr gives features ~36% less width than task
+//    at 1100px. Switching to 1fr/1fr balances the two sides.
+//
+// 2. Timer height: the features inner grid uses 1fr/1.1fr rows, which at a
+//    768px viewport gives the timer card only ~305px — too short for the
+//    pomodoro content (~276px needed) after padding and the nav bar.
+//    Changing to 1.5fr/1fr gives the timer ~384px, enough to breathe.
+@media only screen and (max-width: 1200px) {
+  .grid-container {
+    grid-template-columns: 1fr 1fr;
+  }
+  .features {
+    grid-template-rows: 1.5fr 1fr;
+  }
+}
+
 // Responsive — only stack below 900px (tablet / mobile)
 // The bento grid runs on all desktop screens including 1280px, 1440px, 1512px+
 @media only screen and (max-width: 900px) {
@@ -407,7 +423,7 @@ button {
   }
   // Give the timer card a bit more vertical breathing room on mobile
   .timer {
-    padding: 24px 22px;
+    padding: 20px 24px;
   }
   // Fixed height so the embed fills the card without dead space below
   .music {
@@ -423,7 +439,7 @@ button {
     margin: 0 0 18px 0;
   }
   .timer {
-    padding: 22px 18px;
+    padding: 18px 20px;
   }
   .music {
     height: 340px;

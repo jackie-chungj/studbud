@@ -48,7 +48,7 @@
     align-items: center;
     justify-content: space-between;
     flex-shrink: 0;
-    padding: 14px 20px 12px;
+    padding: 20px 20px;
     border-bottom: 1px solid rgba(20, 35, 72, 0.04);
 
     h2 {
@@ -63,13 +63,16 @@
     flex: 1;
     min-height: 0;
     display: grid;
-    grid-template-columns: max-content;
-    grid-template-rows: 60px minmax(30px, 100%) minmax(30px, 100%);
-    gap: 0px 0px;
+    grid-template-columns: 60px 1fr 1fr;
+    grid-template-rows: auto 1fr 1fr;
     grid-template-areas:
-        "space urgent not-urgent" "important cards cards" "not-important cards cards";
+        "space urgent not-urgent"
+        "important cards cards"
+        "not-important cards cards";
+    gap: 0;
     grid-area: quadrants;
-    padding-bottom: 12px;
+    padding-bottom: 22px;
+    padding-left: 0px;
 }
 
 .space { 
@@ -106,6 +109,7 @@
     transform: rotate(-180deg);
     padding: 8px;
     margin-top: 20px;
+    place-self: center;
 }
 
 
@@ -116,9 +120,11 @@
     grid-template-rows: 1fr 1fr;
     gap: 14px 14px;
     grid-template-areas:
-        "do-it-card schedule-card" "relegate-card dont-do-card";
+        "do-it-card schedule-card"
+        "relegate-card dont-do-card";
     grid-area: cards;
     padding-right: 24px;
+    min-height: 0;
 
     .do-it-card { 
         grid-area: do-it-card;
@@ -140,24 +146,9 @@
         background-color: #fff5f1;
     }
 }
+
 .responsive-card-text {
     display: none;
-}
-.task-cards {
-    border-radius: 20px;
-    padding: 18px 22px;
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
-
-    // The quadrant content wrapper (#do-it, #schedule, etc.)
-    // must grow to fill the remaining card height so .box can scroll.
-    > div {
-        flex: 1;
-        min-height: 0;
-        display: flex;
-        flex-direction: column;
-    }
 }
 
 .task-cards h2 {
@@ -174,16 +165,37 @@
 // ── Task list box ──────────────────────────────────────────
 // flex: 1 + min-height: 0 lets it grow to fill the parent
 // (#do-it etc.) and scroll only once that space is full.
+.task-cards {
+    border-radius: 20px;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+@media only screen and (min-width: 922px) {
+    .task-cards {
+        height: 100%;
+    }
+}
+
+.task-cards > div {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
 .box {
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    margin: 0;
-    padding: 0;
     flex: 1;
     min-height: 0;
+    gap: 4px;
     overflow-y: auto;
-    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
 
 // ── Task row ───────────────────────────────────────────────
@@ -302,7 +314,7 @@
     font-size: 11px;
     color: rgba(20, 35, 72, 0.3);
     font-style: italic;
-    margin: 4px 0 0;
+    margin: 0 0 0;
     list-style: none;
 }
 
@@ -310,26 +322,21 @@
     font-size: 0.68rem;
     color: rgba(20, 35, 72, 0.4);
     font-weight: 400;
-    margin: 4px 0 8px;
+    margin: 12px 0 8px;
     line-height: 1.4;
 }
 
 // Responsive
+// ── Mobile stacked (≤921px) ───────────────────────────────
+// Horizontal unit: 20px used consistently across header,
+// wrapper, and card padding.
 @media only screen and (max-width: 921px) {
     .task-header {
-        padding: 12px 16px 10px;
-    }
-    .cards {
-        display: block;
-        padding: 0 16px;
-        .task-cards {
-            margin: 0 0 12px 0;
-            padding: 14px 16px;
-        }
+        padding: 16px 20px;
     }
     .quadrants {
         display: block;
-        padding: 0 0 12px;
+        padding-bottom: 20px;
     }
     .urgent, .not-urgent {
         padding: 0;
@@ -342,18 +349,17 @@
         padding: 0;
         margin: 0;
     }
-    // Section label shown above each card on mobile (e.g. "Do Now")
-    .cards .responsive-card-text {
+    .cards {
         display: block;
-        font-size: 20px;
-        text-align: left;
-        margin: 14px 0 4px 16px;
-        font-weight: 600;
-        color: rgba(20, 35, 72, 0.55);
+        padding: 0 20px;
+    }
+    .cards .responsive-card-text {
+        display: none;
     }
     .task-cards {
-        padding: 14px 16px;
-        margin: 0 0 12px 0;
+        padding: 18px 20px;
+        margin-bottom: 18px;
+        min-height: 80px;
     }
     .task-cards h2 {
         font-size: 15px;
@@ -364,22 +370,8 @@
     }
 }
 
+// ── Narrow mobile (≤570px) — font sizes only ──────────────
 @media only screen and (max-width: 570px) {
-    .task-header h2 {
-        font-size: 16px;
-    }
-    .cards .responsive-card-text {
-        font-size: 17px;
-        margin: 10px 0 4px 14px;
-    }
-    .task-cards {
-        padding: 12px 14px;
-        margin: 0 0 10px 0;
-    }
-    .task-cards h2 {
-        font-size: 14px;
-    }
-    .cards {
-        padding: 0 14px;
-    }
+    .task-header h2 { font-size: 16px; }
+    .task-cards h2  { font-size: 14px; }
 }

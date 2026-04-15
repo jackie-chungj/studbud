@@ -1,13 +1,13 @@
 // ── Dictionary card ────────────────────────────────────────
 
 .dictionary {
-    padding: 18px 20px 16px;
+    padding: 20px 20px;
     display: flex;
     flex-direction: column;
 }
 
 .dict-header {
-    margin-bottom: 10px;
+    margin-bottom: 14px;
 
     h2 {
         font-size: 16px;
@@ -143,9 +143,9 @@ section.data {
 
 // ── Responsive ─────────────────────────────────────────────
 @media only screen and (max-width: 900px) {
-    .dictionary { padding: 22px 22px 18px; }
+    .dictionary { padding: 22px 24px; }
 }
 
 @media only screen and (max-width: 570px) {
-    .dictionary { padding: 20px 20px 16px; }
+    .dictionary { padding: 18px 20px; }
 }
